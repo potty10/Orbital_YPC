@@ -1,12 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { useAuthentication } from '../../api/firebase';
+import { getAuth } from 'firebase/auth';
+
+const auth = getAuth();
 
 export default function Home() {
+  const { user } = useAuthentication();
   return (
     <View style={styles.container}>
-      <Text>Home screen!</Text>
-      <StatusBar style="auto" />
+      <Text>Welcome {user?.email}!</Text>
+      <Button title="Sign Out" onPress={() => signOut(auth)} />
     </View>
   );
 }

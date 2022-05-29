@@ -5,8 +5,10 @@ import { Input } from "@rneui/themed";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import React from 'react';
 
+const auth = getAuth();
+
 export default function SignIn() {
-  const [value, setValue] = React.useState({
+  const [value, setValue] = useState({
     email: '',
     password: '',
     error: ''
