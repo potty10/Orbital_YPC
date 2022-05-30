@@ -7,6 +7,7 @@ import Welcome from './src/components/auth/Welcome';
 import Home from './src/components/main/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import DrawerNavigation from './src/components/main/DrawerNavigation';
 
 const Stack = createStackNavigator();
 
@@ -14,11 +15,7 @@ export default function App() {
   const { user } = useAuthentication();
   return (
       user ? (
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Home" component={Home} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <DrawerNavigation />
       ) : (
         <NavigationContainer>
           <Stack.Navigator>
