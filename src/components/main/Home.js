@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { useAuthentication } from '../../api/firebase';
-import { signOut } from 'firebase/auth';
-import { getAuth } from 'firebase/auth';
+import { signOut, getAuth } from 'firebase/auth';
 
 export default function Home() {
   const { user } = useAuthentication();
