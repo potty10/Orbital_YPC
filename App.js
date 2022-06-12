@@ -1,30 +1,28 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useAuthentication } from './src/api/firebase';
-import SignIn from './src/components/auth/SignIn';
-import SignUp from './src/components/auth/SignUp';
-import Welcome from './src/components/auth/Welcome';
-import Home from './src/components/main/Home';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import DrawerNavigation from './src/components/main/DrawerNavigation';
 
-const Stack = createStackNavigator();
+// Drawer
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+//Pages
+import UserFeedPage from './src/components/main/UserFeedPage';
+import ListWorkoutPage from './src/components/main/ListWorkoutPage';
+import StartWorkoutPage from './src/components/main/StartWorkoutPage';
+import CommunitiesPage from './src/components/communities/CommunitiesPage'
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const { user } = useAuthentication();
   return (
-      user ? (
-        <DrawerNavigation />
-      ) : (
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Welcome" component={Welcome} />
-            <Stack.Screen name="Sign In" component={SignIn} />
-            <Stack.Screen name="Sign Up" component={SignUp} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      )
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Feed">
+        <Drawer.Screen name="Feed" component={UserFeedPage} />
+        <Drawer.Screen name="Communities" component={CommunitiesPage} />
+        <Drawer.Screen name="Workout Plans" component={ListWorkoutPage} />
+        <Drawer.Screen name="Start Workout" component={StartWorkoutPage} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 

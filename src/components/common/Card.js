@@ -1,13 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View, Image} from 'react-native';
 
-export default function Card({item}) {
+// Assets
+import clockImage from "../../assets/clock.png";
+
+// By default, the width of Card depends on the alignItems property of the flex parent container 
+export default function Card({style, item}) {
   return (
-    <View style={styles.container}>
-        <View style={[styles.container, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+    <View style={[styles.container, style]}>
+        <View style={styles.header}>
             <Text>{item?.mainTitle}</Text>
             <Text>{item?.subTitle}</Text>
-            <Image source={require('../assets/clock.png')} />
+            <Image source={clockImage} style={{height: 20, width: 20}}/>
         </View>
       <Text>{item?.content}</Text>
 
@@ -17,9 +21,14 @@ export default function Card({item}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderWidth: 1,
+    height: 143,
+    padding: 22.
   },
+  header: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginBottom: 8
+  }
 });
