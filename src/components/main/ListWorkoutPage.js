@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, FlatList, Pressable } from 'react-native';
+import { StyleSheet, View, FlatList, Pressable, Text } from 'react-native';
 import Card from '../common/Card';
 
 const workoutPlans = [
@@ -16,20 +16,23 @@ const workoutPlans = [
         content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
     }
 ];
-export default function ListWorkoutPage() {
+export default function ListWorkoutPage({navigation}) {
     const renderItem = ({ item }) => (
-        <Pressable><Card style={styles.card} item={item}/></Pressable>
+        <Pressable><Card style={styles.card} item={item} /></Pressable>
     )
     return (
-        <View style={styles.container}>     
-            <FlatList data={workoutPlans} renderItem = {renderItem}/>
+        <View style={styles.container}>
+            <Pressable onPress={() => navigation.navigate('Create Workout')}>
+                <Text>Create New Workout</Text>
+            </Pressable>
+            <FlatList data={workoutPlans} renderItem={renderItem} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {  
-        flex: 1,      
+    container: {
+        flex: 1,
         backgroundColor: '#fff',
         padding: 26,
         alignItems: "stretch", // Default value, width of items stretch to fit container width
