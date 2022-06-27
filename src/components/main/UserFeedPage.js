@@ -12,7 +12,7 @@ const userFeedDummyData = [
         content: "At food yesterday"
     }
 ];
-export default function UserFeed() {
+export default function UserFeedPage() {
     const renderItem = ({ item }) => {
         <Pressable><CardFeed item={item} /></Pressable>
     }

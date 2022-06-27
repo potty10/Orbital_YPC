@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 export default function Welcome({ navigation }) {
     return (
         <View style={styles.container}>
-            <Text>Welcome</Text>
+            <Text>Sign in to get started!</Text>
             <Button title="Sign in" onPress={() => navigation.navigate('Sign In')} />
             <Button title="Sign up" onPress={() => navigation.navigate('Sign Up')} />
         </View>

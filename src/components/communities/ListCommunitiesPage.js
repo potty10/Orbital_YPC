@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+
+// Firebase
 import { useAuthentication } from '../../api/firebase';
 import { signOut, getAuth } from 'firebase/auth';
 
-export default function Home() {
+export default function ListCommunitiesPage() {
   const { user } = useAuthentication();
   return (
     <View style={styles.container}>
