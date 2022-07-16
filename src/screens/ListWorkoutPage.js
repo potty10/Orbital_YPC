@@ -1,40 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList, Pressable, Text } from 'react-native';
-import Card from '../common/Card';
+import Card from '../components/Card';
 
-const workoutPlans = [
+const dummyWorkoutPlans = [
     {
-        id: 1,
         mainTitle: "HIIT 1",
         subTitle: "30 Minutes",
         content: "40 Burpees"
     },
     {
-        id: 2,
         mainTitle: "Back day",
         subTitle: "1 Hour",
         content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
+    },
+    {
+        mainTitle: "Leg day",
+        subTitle: "1 Hour",
+        content: "5x5 Squats\n 3x8 3x8 Lunges"
+    },
+    {
+        mainTitle: "Arm day",
+        subTitle: "1 Hour",
+        content: "300 Bicep curls\n 300 Tricep pushdown"
     }
 ];
-async function transformData(workouts) {
-    var result = []
-    for (var i = 0; i < workouts.length; i++) {
-        var item = {
-            id: wor
-        }
-    }
 
-}
 export default function ListWorkoutPage({navigation}) {
     let [workoutPlans, setWorkoutPlans] = useState([]);
-    // Load data from database
-    // useEffect(() => {
-    //     // setWorkoutPlans(transformData(getWorkouts()));
-    //     setWorkoutPlans(getWorkouts());
-    // }, [])
+
+    // TODO: Load data from database
+    useEffect(() => {
+        // setWorkoutPlans(transformData(getWorkouts()));
+        setWorkoutPlans(dummyWorkoutPlans);
+    }, [])
+
     const renderItem = ({ item }) => (
         <Pressable><Card style={styles.card} item={item} /></Pressable>
     )
+
     return (
         <View style={styles.container}>
             <Pressable onPress={() => navigation.navigate('Create Workout')}>
