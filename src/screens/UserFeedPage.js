@@ -47,7 +47,6 @@ export default function UserFeedPage() {
     )
     return (
         <View style={styles.container}>
-            {/* <Text>A week at a glance</Text>             */}
             <FlatList data={userFeedDummyData} renderItem = {renderItem}/>
         </View>
     );

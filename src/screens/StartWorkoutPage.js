@@ -1,29 +1,33 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, Pressable, Image } from 'react-native';
-import Card from '../common/Card';
+import Card from '../components/Card';
 
 // Assets
-import BicycleImage from "../../assets/bicycle.png";
-import RunningShoesImage from "../../assets/running_shoes.png";
-import SwimmerImage from "../../assets/swimmer.png";
+import BicycleImage from "../assets/bicycle.png";
+import RunningShoesImage from "../assets/running_shoes.png";
+import SwimmerImage from "../assets/swimmer.png";
 
 const workoutPlans = [
     {
-        id: 1,
         mainTitle: "HIIT 1",
         subTitle: "30 Minutes",
         content: "40 Burpees"
     },
     {
-        id: 2,
         mainTitle: "Back day",
+        subTitle: "1 Hour",
+        content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
+    },
+    {
+        mainTitle: "Arm day",
         subTitle: "1 Hour",
         content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
     }
 ];
+
 export default function StartWorkoutPage() {
     const renderItem = ({ item }) => (
-        <Pressable><Card item={item}/></Pressable>
+        <Pressable><Card style={styles.card} item={item}/></Pressable>
     )
     return (
         <View style={styles.container}>
@@ -75,5 +79,8 @@ const styles = StyleSheet.create({
     image: {
         height: 25,
         width: 25
+    },
+    card: {
+        marginVertical: 10,
     }
 });

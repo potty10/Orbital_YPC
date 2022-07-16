@@ -40,9 +40,9 @@ export default function ListWorkoutPage({navigation}) {
 
     return (
         <View style={styles.container}>
-            <Pressable onPress={() => navigation.navigate('Create Workout')}>
+            {/* <Pressable onPress={() => navigation.navigate('Create Workout')}>
                 <Text>Create New Workout</Text>
-            </Pressable>
+            </Pressable> */}
             {/* <Text>
                 {workoutPlans}
             </Text> */}
