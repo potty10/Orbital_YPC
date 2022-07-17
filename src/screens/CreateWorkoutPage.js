@@ -7,7 +7,7 @@ import { useAuthentication } from '../../firebase';
 const workoutDummyData = [
   {
     mainTitle: "Set 1",
-    content: "Ran 40 miles yesterday"
+    content: "Bench press 5 reps"
   },
   {
     mainTitle: "Set 2",
@@ -30,31 +30,11 @@ const workoutDummyData = [
     content: "Ran 35 miles yesterday"
   },
   {
-    mainTitle: "Set 6",
+    mainTitle: "Set 7",
     content: "Ran 35 miles yesterday"
   },
   {
-    mainTitle: "Set 6",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 6",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 6",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 6",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 6",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 6",
+    mainTitle: "Set 8",
     content: "Ran 35 miles yesterday"
   },
 ]
@@ -101,7 +81,7 @@ export default function CreateWorkoutPage({ navigation }) {
         {/* <FlatList data={workoutDummyData} renderItem={renderItem} /> */}
         <View style={styles.buttonStyle}>
         <Button title='Repeat'/>
-        <Button title='Add New'/>
+        <Button title='Add New' onPress={() => navigation.navigate("Search Workout")}/>
         <Button title='New Set'/>
       </View>
       <View style={styles.buttonStyle}>
