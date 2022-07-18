@@ -13,8 +13,9 @@ export default function Card({style, item}) {
             <Text>{item?.subTitle}</Text>
             <Image source={clockImage} style={{height: 20, width: 20}}/>
         </View>
-      <Text>{item?.content}</Text>
-
+        <View style={styles.content}>
+          <Text numberOfLines={4}>{item?.content}</Text>
+        </View>
     </View>
   );
 }
@@ -24,11 +25,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     height: 143,
-    padding: 22.
+    padding: 22,
+    flex: 1
   },
   header: {
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     marginBottom: 8
+  },
+  // Text model does not follow the box model
+  // Hence we need to wrap in a view with flex: 1
+  // https://stackoverflow.com/questions/71394789/react-native-text-component-overflows-parent-when-inside-with-another-view
+  content: {
+    flex: 1,
   }
 });

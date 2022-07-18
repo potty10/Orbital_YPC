@@ -1,76 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, Pressable, TextInput, Button, ScrollView } from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
-import { useAuthentication } from '../../firebase';
+import { useAuthentication, db } from '../../firebase';
+import { useIsFocused } from '@react-navigation/native';
 //import { Searchbar } from 'react-native-paper';
-
-const workoutDummyData = [
-  {
-    mainTitle: "Set 1",
-    content: "Bench press 5 reps"
-  },
-  {
-    mainTitle: "Set 2",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 3",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 4",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 5",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 6",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 7",
-    content: "Ran 35 miles yesterday"
-  },
-  {
-    mainTitle: "Set 8",
-    content: "Ran 35 miles yesterday"
-  },
-]
 
 function Card({ item }) {
   return (
       <View style={cardStyle.container}>
-          <Text style={cardStyle.header}>{item?.mainTitle}</Text>         
-          <Text>{item?.content}</Text>
+          <Text style={cardStyle.header}>{item?.exerciseName}</Text>         
+          <Text>{item?.exerciseRepititions}</Text>
+          <Text>{item?.exerciseWeight}</Text>
       </View>
   );
 }
 
 // https://reactnavigation.org/docs/5.x/header-buttons/
 // Under the section: Header interaction with its screen component
-export default function CreateWorkoutPage({ navigation }) {
-  const [workoutTitle, setWorkoutTitle] = useState();
+export default function CreateWorkoutPage({ navigation, route }) {
+  const [workoutTitle, setWorkoutTitle] = useState('');
   const [exerciseList, setExerciseList] = useState([])
   const { user } = useAuthentication()
 
-  let addToDo = async (todo) => {
-    let toDoToSave = {
-      text: todo,
-      completed: false,
+  //https://stackoverflow.com/questions/70963093/is-there-a-way-to-trigger-usefocuseffect-every-time-the-screen-gets-focused-with
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused && route.params) {
+      // Set params to null so params are not stored
+      // https://reactnavigation.org/docs/params/
+      navigation.setParams(null);
+      setExerciseList(oldList => [...oldList, route.params])
+    }  
+  }, [isFocused])
+
+  let addWorkoutToDb = async () => {
+    let newEntry = {
+      workoutTitle: workoutTitle ? workoutTitle : `New Workout (${(new Date()).toLocaleDateString('en-SG')})`,
+      workoutContent: exerciseList,
       userId: user.uid
     };
-    const docRef = await addDoc(collection(db, "todos"), toDoToSave); 
-    toDoToSave.id = docRef.id;
-    let updatedToDos = [...toDos];
-    updatedToDos.push(toDoToSave);
-    setToDos(updatedToDos);
+    const docRef = await addDoc(collection(db, "user_workouts"), newEntry); 
+    // toDoToSave.id = docRef.id;
+    // let updatedToDos = [...toDos];
+    // updatedToDos.push(toDoToSave);
+    // setToDos(updatedToDos);
   };
-
-  const renderItem = ({ item, index }) => (
-    <Card item={item} />
-  )
 
   return (
     <View style={styles.container}>
@@ -78,15 +52,15 @@ export default function CreateWorkoutPage({ navigation }) {
         textAlign={'center'} onChangeText={text => setWorkoutTitle(text)} />    
       <ScrollView>
         {exerciseList.map(item => <Card item={item} />)}
-        {/* <FlatList data={workoutDummyData} renderItem={renderItem} /> */}
+        {/* <FlatList data={exerciseList} renderItem={({ item, index }) => (<Card item={item} />)} /> */}
         <View style={styles.buttonStyle}>
-        <Button title='Repeat'/>
+        <Button title='Repeat' onPress={() => alert("Hello there")}/>
         <Button title='Add New' onPress={() => navigation.navigate("Search Workout")}/>
         <Button title='New Set'/>
       </View>
       <View style={styles.buttonStyle}>
         <Button title='Cancel'/>
-        <Button title='Create'/>
+        <Button title='Create' onPress={addWorkoutToDb}/>
       </View>
       </ScrollView>     
     </View>
