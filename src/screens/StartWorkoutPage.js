@@ -1,11 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable, Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { StyleSheet, Text, View, FlatList, Pressable, Image, ActivityIndicator } from 'react-native';
 import Card from '../components/Card';
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
+import { getAuth } from 'firebase/auth';
+import { db } from '../../firebase';
 
 // Assets
 import BicycleImage from "../assets/bicycle.png";
 import RunningShoesImage from "../assets/running_shoes.png";
 import SwimmerImage from "../assets/swimmer.png";
+import { NavigationContainer } from '@react-navigation/native';
 
 const workoutPlans = [
     {
@@ -25,17 +29,63 @@ const workoutPlans = [
     }
 ];
 
-export default function StartWorkoutPage() {
+export default function StartWorkoutPage({navigation}) {
+    const [workoutPlans, setWorkoutPlans] = useState([]);
+    const [isLoading, setIsLoading] = useState(true)
+    const auth = getAuth()
+
+    // Input: Object with workoutContet, workoutTitle
+    // Output: Object with mainTitle, subTitle, content
+    const mapDocumentToUi = (document) => {
+        let content = ""
+        document.workoutContent.forEach(exercise => {
+            content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
+        })
+        return {
+            mainTitle: document.workoutTitle,
+            subTitle: "1 Hour",
+            content: content
+        }
+    }
+
+    const loadAllWorkouts = async () => {
+        const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
+    
+        const querySnapshot = await getDocs(q);
+        let exerciseList = [];
+        querySnapshot.forEach((doc) => {
+          let workoutItem = mapDocumentToUi(doc.data());
+          exerciseList.push(workoutItem);
+        });   
+        setWorkoutPlans(exerciseList);
+        setIsLoading(false);
+        // setIsRefreshing(false);
+    };
+
+    const startWorkout = () => {
+        navigation.navigate('Timer Workout')
+    }
+
+    // TODO: Load data from database
+    useEffect(() => {
+        // setWorkoutPlans(transformData(getWorkouts()));
+        loadAllWorkouts();
+    }, [])
+
     const renderItem = ({ item }) => (
         <Pressable><Card style={styles.card} item={item}/></Pressable>
     )
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Aerobic exercises</Text>
             <View style={styles.carousel}>
-                <View style={styles.icon}>
-                    <Image source={BicycleImage} style={styles.image}/>
-                </View>
+                <Pressable onPress={startWorkout}>
+                    <View style={styles.icon}>
+                        <Image source={BicycleImage} style={styles.image}/>
+                    </View>
+                </Pressable>
+                
                 <View style={styles.icon}>
                     <Image source={RunningShoesImage} style={styles.image}/>
                 </View>
@@ -44,7 +94,7 @@ export default function StartWorkoutPage() {
                 </View>
             </View>
             <Text style={styles.title}>Workout Plans</Text>         
-            <FlatList data={workoutPlans} renderItem = {renderItem}/>
+            {isLoading ? <ActivityIndicator/> : <FlatList data={workoutPlans} renderItem={renderItem} />}
         </View>
     );
 }
