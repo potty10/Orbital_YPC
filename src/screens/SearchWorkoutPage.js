@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Pressable, TextInput, Button } from 'react-native';
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { FAB, Icon } from "@rneui/themed";
-import { useIsFocused } from '@react-navigation/native';
-
 //import { Searchbar } from 'react-native-paper';
 
 // const completeWorkoutList = [
@@ -76,15 +73,6 @@ export default function SearchWorkoutPage({ navigation, route }) {
   const [searchResult, setSearchResult] = useState(completeWorkoutList)
   const [exerciseCount, setExerciseCount] = useState(1)
   const [exerciseWeight, setExerciseWeight] = useState(1)
-
-  const isFocused = useIsFocused();
-  useEffect(() => {
-    if (isFocused && route.params) {
-      // Set params to null so params are not stored
-      // https://reactnavigation.org/docs/params/
-      navigation.setParams(null);
-    }  
-  }, [isFocused])
 
   const renderItem = ({ item, index }) => {
     return (

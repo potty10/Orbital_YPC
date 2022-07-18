@@ -25,15 +25,19 @@ export default function CreateWorkoutPage({ navigation, route }) {
   //https://stackoverflow.com/questions/70963093/is-there-a-way-to-trigger-usefocuseffect-every-time-the-screen-gets-focused-with
   const isFocused = useIsFocused();
   useEffect(() => {
-    if (isFocused && route.params) {
+    if (isFocused && route.params?.exerciseName) {
+      setExerciseList(oldList => [...oldList, {...route.params}])
       // Set params to null so params are not stored
       // https://reactnavigation.org/docs/params/
-      navigation.setParams(null);
-      setExerciseList(oldList => [...oldList, route.params])
+      navigation.setParams({
+        exerciseName: null,
+        exerciseRepititions: null,
+        exerciseWeight: null
+      });
     }  
   }, [isFocused])
 
-  let addWorkoutToDb = async () => {
+  const addWorkoutToDb = async () => {
     let newEntry = {
       workoutTitle: workoutTitle ? workoutTitle : `New Workout (${(new Date()).toLocaleDateString('en-SG')})`,
       workoutContent: exerciseList,
@@ -46,6 +50,12 @@ export default function CreateWorkoutPage({ navigation, route }) {
     // setToDos(updatedToDos);
   };
 
+  const repeatLastWorkout = () => {
+    setExerciseList(oldList => {
+      return [...oldList, {...oldList[oldList.length - 1]}]
+    })
+  }
+  
   return (
     <View style={styles.container}>
       <TextInput style={{marginBottom: 5, fontSize: 24, marginBottom: 20, marginTop: 20}} placeholder='Workout Title' value={workoutTitle}
@@ -54,12 +64,12 @@ export default function CreateWorkoutPage({ navigation, route }) {
         {exerciseList.map(item => <Card item={item} />)}
         {/* <FlatList data={exerciseList} renderItem={({ item, index }) => (<Card item={item} />)} /> */}
         <View style={styles.buttonStyle}>
-        <Button title='Repeat' onPress={() => alert("Hello there")}/>
+        <Button title='Repeat' onPress={() => repeatLastWorkout()}/>
         <Button title='Add New' onPress={() => navigation.navigate("Search Workout")}/>
         <Button title='New Set'/>
       </View>
       <View style={styles.buttonStyle}>
-        <Button title='Cancel'/>
+        <Button title='Cancel' onPress={() => navigation.goBack()}/>
         <Button title='Create' onPress={addWorkoutToDb}/>
       </View>
       </ScrollView>     
