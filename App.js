@@ -19,6 +19,8 @@ import CreateWorkoutPage from './src/screens/CreateWorkoutPage';
 import StartWorkoutPage from './src/screens/StartWorkoutPage';
 import SearchWorkoutPage from './src/screens/SearchWorkoutPage';
 import WorkoutTimerPage from './src/screens/timer/WorkoutTimerPage';
+import WorkoutSummaryPage from './src/screens/WorkoutSummaryPage';
+
 
 // Firebase
 import { useAuthentication } from './firebase';
@@ -59,6 +61,7 @@ export default function App() {
           <Stack.Screen name="Create Workout" component={CreateWorkoutPage} />
           <Stack.Screen name="Search Workout" component={SearchWorkoutPage} />
           <Stack.Screen name="Timer Workout" component={WorkoutTimerPage} />
+          <Stack.Screen name="Workout Summary" component={WorkoutSummaryPage} />
         </Stack.Navigator>
 
       ) : (

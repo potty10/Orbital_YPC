@@ -5,28 +5,6 @@ import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } fro
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
 
-const dummyWorkoutPlans = [
-    {
-        mainTitle: "HIIT 1",
-        subTitle: "30 Minutes",
-        content: "40 Burpees"
-    },
-    {
-        mainTitle: "Back day",
-        subTitle: "1 Hour",
-        content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
-    },
-    {
-        mainTitle: "Leg day",
-        subTitle: "1 Hour",
-        content: "5x5 Squats\n 3x8 3x8 Lunges"
-    },
-    {
-        mainTitle: "Arm day",
-        subTitle: "1 Hour",
-        content: "300 Bicep curls\n 300 Tricep pushdown"
-    }
-];
 
 export default function ListWorkoutPage({navigation}) {
     const [workoutPlans, setWorkoutPlans] = useState([]);

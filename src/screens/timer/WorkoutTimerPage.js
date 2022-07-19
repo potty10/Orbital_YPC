@@ -11,7 +11,7 @@ const getRemaining = (time) => {
     return { mins: formatNumber(mins), secs: formatNumber(secs) };
 }
 
-export default function WorkoutTimerPage() {
+export default function WorkoutTimerPage({ navigation }) {
   const [remainingSecs, setRemainingSecs] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const { mins, secs } = getRemaining(remainingSecs);
@@ -48,7 +48,7 @@ export default function WorkoutTimerPage() {
       <TouchableOpacity onPress={reset} style={[styles.button, styles.buttonReset]}>
           <Text style={[styles.buttonText, styles.buttonTextReset]}>Reset</Text>
       </TouchableOpacity>
-      <Pressable>
+      <Pressable onPress={() => {navigation.navigate('Workout Summary')}}>
         <Text style={[styles.buttonText, styles.buttonTextReset]}>Done</Text>
       </Pressable>
     </View>
