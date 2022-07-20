@@ -1,49 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, Pressable, Text, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, FlatList, Pressable, Text, Alert } from 'react-native';
 import { Button } from '@rneui/themed';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
 import { db, useAuthentication } from '../../firebase';
-
-function Card({ item }) {
-    return (
-        <View style={cardStyle.container}>
-            <Text style={cardStyle.header}>{item?.exerciseName}</Text>         
-            <Text>{item?.exerciseRepititions}</Text>
-            <Text>{item?.exerciseWeight}</Text>
-        </View>
-    );
-  }
+import { useDispatch, useSelector } from 'react-redux';
+import SimpleCard from '../components/SimpleCard';
 
 export default function WorkoutSummaryPage({navigation}) {
-    const workoutTitle = `Workout Completed (${(new Date()).toLocaleDateString('en-SG')})`
-    const workoutContent = [ {exerciseName: "Running"}]
+    const dispatch = useDispatch();
+    const { workoutContent, workoutTitle, workoutDuration } = useSelector(state => state.currentWorkout)
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useAuthentication()
 
     let saveWorkoutToHistory = async () => {
         setIsLoading(true)
         let newEntry = {
-            workoutTitle: workoutTitle,
+            workoutTitle: `Completed: ${workoutTitle}`,
             workoutContent: workoutContent,
-            workoutDuration: 3600000, //Number of milliseconds
+            workoutDuration: workoutDuration, //Number of milliseconds
             userId: user.uid,
             created: new Date()
         };
         const docRef = await addDoc(collection(db, "user_history"), newEntry); 
         setIsLoading(false);
+        Alert.alert("Good Job", null, [
+            { text: "close", onPress: () => navigation.navigate("Feed") }
+        ])
         // setIsRefreshing(false);
     };
  
+    const cancelSave = () => {
+        Alert.alert("Are you sure?", "The workout will not be saved if you cancelled", [
+            {
+                text: "No",
+                style: "cancel"
+              },
+            { text: "Yes", onPress: () => navigation.navigate("Workout List") }
+        ])
+    }
+
     const renderItem = ({ item }) => (
-        <Card item={item}/>
+        <SimpleCard item={item}/>
     )
     return (
         <View style={styles.container}>
             <Text style={styles.header} textAlign={'center'}>{workoutTitle}</Text>
+            <Text style={styles.header} textAlign={'center'}>
+                {`Duration: ${workoutDuration} seconds`}
+            </Text>
             <FlatList data={workoutContent} renderItem={renderItem} />
             <View style={styles.buttonRow}>
-                <Button title="Exit"/>
+                <Button title="Cancel" onPress={cancelSave}/>
                 <Button title="Save" loading={isLoading} onPress={saveWorkoutToHistory}/>
             </View>   
         </View>
@@ -67,14 +75,4 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
 
-});
-
-const cardStyle = StyleSheet.create({
-    container: {
-      backgroundColor: '#fff',
-      padding: 5,
-    },
-    header: {
-      marginBottom: 8
-    }
 });

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Alert, Pressable, TextInput, Button, ScrollView } from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { useAuthentication, db } from '../../firebase';
 import { useIsFocused } from '@react-navigation/native';
-//import { Searchbar } from 'react-native-paper';
 
 function Card({ item }) {
   return (
@@ -44,6 +43,9 @@ export default function CreateWorkoutPage({ navigation, route }) {
       userId: user.uid
     };
     const docRef = await addDoc(collection(db, "user_workouts"), newEntry); 
+    Alert.alert("Workout Created", null, [
+      { text: "OK", onPress: () => navigation.navigate("Workout List") }
+    ])
     // toDoToSave.id = docRef.id;
     // let updatedToDos = [...toDos];
     // updatedToDos.push(toDoToSave);

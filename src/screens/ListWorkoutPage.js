@@ -21,7 +21,7 @@ export default function ListWorkoutPage({navigation}) {
         })
         return {
             mainTitle: document.workoutTitle,
-            subTitle: "1 Hour",
+            subTitle: document?.workoutDuration,
             content: content
         }
     }
@@ -36,13 +36,14 @@ export default function ListWorkoutPage({navigation}) {
           exerciseList.push(workoutItem);
         });   
         setWorkoutPlans(exerciseList);
-        setIsLoading(false);
+        
         // setIsRefreshing(false);
     };
 
     // TODO: Load data from database
     useEffect(() => {
         loadAllWorkouts();
+        setIsLoading(false);
     }, [])
 
     const onRefresh = useCallback(() => {

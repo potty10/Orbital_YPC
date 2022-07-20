@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View,  TouchableOpacity, Dimensions, Pressable } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { StyleSheet, Text, View,  TouchableOpacity, Dimensions, Pressable, Button } from 'react-native';
 import { secondToHHMMSS } from '../../utils/DateTimeUtil';
 import { useIsFocused } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 
-const screen = Dimensions.get('window');
+// Redux
+import {setCurrentWorkout} from '../../slices/currentWorkoutSlice'
+import { mapDocumentToUi } from '../../components/Card';
 
 export default function WorkoutTimerPage({ navigation }) {
+  const dispatch = useDispatch();
+  const currentWorkout = useSelector(state => state.currentWorkout)
+  const {mainTitle, content} = mapDocumentToUi(currentWorkout)
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState(null)
+  let interval = null; // Id of setInterval
 
   const toggle = () => {
     if (!isActive) setStartTime(new Date());
@@ -18,12 +25,16 @@ export default function WorkoutTimerPage({ navigation }) {
 
   const reset = () => {
     setElapsedSeconds(0);
-    setIsActive(false);
+    
   }
 
-  
+  const completeWorkout = () => {
+    dispatch(setCurrentWorkout({workoutDuration: elapsedSeconds}))
+    navigation.navigate('Workout Summary')
+  }
+
   useEffect(() => {
-    let interval = null;
+    
     if (isActive) {
       interval = setInterval(()=> {
         setElapsedSeconds(( new Date() - startTime) / 1000);
@@ -34,6 +45,16 @@ export default function WorkoutTimerPage({ navigation }) {
     }
     return () => clearInterval(interval);
   }, [isActive]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={completeWorkout} style={{ marginRight: 26 }}>
+          <Text>Done</Text>
+        </Pressable>
+      ),
+    });
+  }, [navigation])
 
   // When screen focuses
   // const isFocused = useIsFocused();
@@ -49,16 +70,26 @@ export default function WorkoutTimerPage({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <View style={{flex: 2, padding: 30, alignItems: 'center'}}>
+        <Text>{mainTitle}</Text>
+        <Text>{content}</Text>
+      </View>
+      <View style={{flex: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
       <Text style={styles.timerText}>{secondToHHMMSS(elapsedSeconds)}</Text>
-      <TouchableOpacity onPress={toggle} style={styles.button}>
-          <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={reset} style={[styles.button, styles.buttonReset]}>
-          <Text style={[styles.buttonText, styles.buttonTextReset]}>Reset</Text>
-      </TouchableOpacity>
-      <Pressable onPress={() => {navigation.navigate('Workout Summary')}}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={toggle} style={styles.button}>
+            <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={reset} style={[styles.button, styles.buttonReset]}>
+            <Text style={[styles.buttonText, styles.buttonTextReset]}>Reset</Text>
+        </TouchableOpacity>
+      </View>
+      </View>
+      
+      
+      {/* <Pressable onPress={completeWorkout}>
         <Text style={[styles.buttonText, styles.buttonTextReset]}>Done</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 }
@@ -66,30 +97,29 @@ export default function WorkoutTimerPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#07121B',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    alignItems: "center",
+    justifyContent: "flex-start" // Default value
+  },
+  buttonContainer: {
+    flexDirection: 'row'
   },
   button: {
       borderWidth: 10,
       borderColor: '#B9AAFF',
-      width: screen.width / 2,
-      height: screen.width / 2,
-      borderRadius: screen.width / 2,
+      borderRadius: 20,
       alignItems: 'center',
       justifyContent: 'center'
-  },
+  }, 
   buttonText: {
       fontSize: 45,
       color: '#B9AAFF'
   },
   timerText: {
-      color: '#fff',
-      fontSize: 90,
+      fontSize: 60,
       marginBottom: 20
   },
   buttonReset: {
-      marginTop: 20,
       borderColor: "#FF851B"
   },
   buttonTextReset: {

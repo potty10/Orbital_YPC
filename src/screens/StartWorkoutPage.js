@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, Text, View, FlatList, Pressable, Image, ActivityIndicator } from 'react-native';
-import Card from '../components/Card';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
+
+// Redux
+import {setCurrentWorkout} from '../slices/currentWorkoutSlice'
+
+// Components
+import Card, { mapDocumentToUi } from '../components/Card';
 
 // Assets
 import BicycleImage from "../assets/bicycle.png";
@@ -11,67 +17,57 @@ import RunningShoesImage from "../assets/running_shoes.png";
 import SwimmerImage from "../assets/swimmer.png";
 
 export default function StartWorkoutPage({navigation}) {
+    const dispatch = useDispatch();
     const [workoutPlans, setWorkoutPlans] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
     const auth = getAuth()
 
-    // Input: Object with workoutContet, workoutTitle
-    // Output: Object with mainTitle, subTitle, content
-    const mapDocumentToUi = (document) => {
-        let content = ""
-        document.workoutContent.forEach(exercise => {
-            content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
-        })
-        return {
-            mainTitle: document.workoutTitle,
-            subTitle: "1 Hour",
-            content: content
-        }
-    }
-
     const loadAllWorkouts = async () => {
         const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
-    
         const querySnapshot = await getDocs(q);
-        let exerciseList = [];
-        querySnapshot.forEach((doc) => {
-          let workoutItem = mapDocumentToUi(doc.data());
-          exerciseList.push(workoutItem);
-        });   
-        setWorkoutPlans(exerciseList);
-        setIsLoading(false);
-        // setIsRefreshing(false);
+        const newWorkoutPlans = []
+        querySnapshot.forEach(doc => {
+            newWorkoutPlans.push(doc.data())
+        })
+        setWorkoutPlans(newWorkoutPlans);
     };
 
-    const startWorkout = () => {
+    useEffect(() => {
+        loadAllWorkouts();
+        setIsLoading(false);
+    }, [])
+
+    const startWorkout = (workoutItem) => {
+        dispatch(setCurrentWorkout(workoutItem))
         navigation.navigate('Timer Workout')
     }
 
-    // TODO: Load data from database
-    useEffect(() => {
-        // setWorkoutPlans(transformData(getWorkouts()));
-        loadAllWorkouts();
-    }, [])
-
     const renderItem = ({ item }) => (
-        <Pressable><Card style={styles.card} item={item}/></Pressable>
+        <Pressable onPress={() => startWorkout({workoutContent: item.workoutContent, workoutTitle: item.workoutTitle})}>
+            <Card style={styles.card} item={mapDocumentToUi(item)}/>
+        </Pressable>
     )
+
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Aerobic exercises</Text>
             <View style={styles.carousel}>
-                <Pressable onPress={startWorkout}>
+                <Pressable onPress={() => startWorkout({workoutContent: [{exerciseName: "Cycling"}]})}>
                     <View style={styles.icon}>
                         <Image source={BicycleImage} style={styles.image}/>
                     </View>
+                </Pressable>  
+                <Pressable onPress={() => startWorkout({workoutContent: [{exerciseName: "Running"}]})}>
+                    <View style={styles.icon}>
+                        <Image source={RunningShoesImage} style={styles.image}/>
+                    </View>
+                </Pressable>             
+                <Pressable onPress={() => startWorkout({workoutContent: [{exerciseName: "Swimming"}]})}>
+                    <View style={styles.icon}>
+                        <Image source={SwimmerImage} style={styles.image}/>
+                    </View>
                 </Pressable>               
-                <View style={styles.icon}>
-                    <Image source={RunningShoesImage} style={styles.image}/>
-                </View>
-                <View style={styles.icon}>
-                    <Image source={SwimmerImage} style={styles.image}/>
-                </View>
             </View>
             <Text style={styles.title}>Workout Plans</Text>         
             {isLoading ? <ActivityIndicator/> : <FlatList data={workoutPlans} renderItem={renderItem} />}
@@ -89,7 +85,7 @@ const styles = StyleSheet.create({
     },
     title: {
         alignSelf: 'center', // Override the default behaviour of stretching along cross axis
-        margin: 30,
+        margin: 20,
         fontSize: 15,
     },
     carousel: {

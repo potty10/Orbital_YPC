@@ -19,7 +19,7 @@ export default function UserFeedPage() {
             if (exercise.exerciseRepititions && exercise.exerciseWeight)
             content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
             else
-            content = content.concat(`${exercise.exerciseName}`)
+            content = content.concat(`${exercise.exerciseName}\n`)
         })
         return {
             mainTitle: document.workoutTitle,

@@ -4,14 +4,21 @@ import { StyleSheet, Text, View, Image} from 'react-native';
 // Assets
 import clockImage from "../assets/clock.png";
 
+// Utilities
+import { msToTime } from '../utils/DateTimeUtil';
+
 // By default, the width of Card depends on the alignItems property of the flex parent container 
 export default function Card({style, item}) {
   return (
     <View style={[styles.container, style]}>
         <View style={styles.header}>
             <Text>{item?.mainTitle}</Text>
-            <Text>{item?.subTitle}</Text>
-            <Image source={clockImage} style={{height: 20, width: 20}}/>
+            {item.subTitle && (
+              <>
+                <Text>{item?.subTitle}</Text>
+                <Image source={clockImage} style={{height: 20, width: 20}}/>
+              </>            
+            )}           
         </View>
         <View style={styles.content}>
           <Text numberOfLines={4}>{item?.content}</Text>
@@ -19,6 +26,23 @@ export default function Card({style, item}) {
     </View>
   );
 }
+
+// A mapping function specifically for this Card
+export const mapDocumentToUi = (document) => {
+  let content = ""
+  document.workoutContent.forEach(exercise => {
+      if (exercise.exerciseRepititions && exercise.exerciseWeight)
+      content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
+      else
+      content = content.concat(`${exercise.exerciseName}\n`)
+  })
+  return {
+      mainTitle: document.workoutTitle,
+      subTitle: document.workoutDuration && msToTime(document.workoutDuration),
+      content: content
+  }
+}
+
 
 const styles = StyleSheet.create({
   container: {
