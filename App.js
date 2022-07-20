@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
+// React
 import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 
 // Screens
@@ -12,7 +13,6 @@ import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import ManageAccount from './src/screens/ManageAccount';
 import ResetPassword from './src/screens/ResetPassword';
-import ToDo from './src/screens/ToDo';
 import UserFeedPage from './src/screens/UserFeedPage';
 import ListWorkoutPage from './src/screens/ListWorkoutPage';
 import CreateWorkoutPage from './src/screens/CreateWorkoutPage';
@@ -20,7 +20,6 @@ import StartWorkoutPage from './src/screens/StartWorkoutPage';
 import SearchWorkoutPage from './src/screens/SearchWorkoutPage';
 import WorkoutTimerPage from './src/screens/timer/WorkoutTimerPage';
 import WorkoutSummaryPage from './src/screens/WorkoutSummaryPage';
-
 
 // Firebase
 import { useAuthentication } from './firebase';
