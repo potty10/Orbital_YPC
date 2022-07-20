@@ -46,7 +46,7 @@ export default function App() {
               options={({ navigation }) => ({
                 title: 'Workout Plans',
                 headerRight: () => (
-                  <Pressable onPress={() => navigation.navigate('Create Workout')}>
+                  <Pressable onPress={() => navigation.navigate('Create Workout')} style={{marginRight: 26}}>
                     <Text>Create</Text>
                   </Pressable>
                 ),

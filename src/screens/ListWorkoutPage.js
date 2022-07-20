@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, Pressable, Text, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator } from 'react-native';
 import Card from '../components/Card';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
@@ -9,6 +9,7 @@ import { db } from '../../firebase';
 export default function ListWorkoutPage({navigation}) {
     const [workoutPlans, setWorkoutPlans] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
+    const [refreshing, setRefreshing] = useState(false)
     const auth = getAuth()
 
     // Input: Object with workoutContet, workoutTitle
@@ -41,9 +42,14 @@ export default function ListWorkoutPage({navigation}) {
 
     // TODO: Load data from database
     useEffect(() => {
-        // setWorkoutPlans(transformData(getWorkouts()));
         loadAllWorkouts();
     }, [])
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        loadAllWorkouts()
+        setRefreshing(false)
+    })
 
     const renderItem = ({ item }) => (
         <Pressable><Card style={styles.card} item={item} /></Pressable>
@@ -51,13 +57,10 @@ export default function ListWorkoutPage({navigation}) {
 
     return (
         <View style={styles.container}>
-            {/* <Pressable onPress={() => navigation.navigate('Create Workout')}>
-                <Text>Create New Workout</Text>
-            </Pressable> */}
-            {/* <Text>
-                {workoutPlans}
-            </Text> */}
-            {isLoading ? <ActivityIndicator/> : <FlatList data={workoutPlans} renderItem={renderItem} />}          
+            {isLoading ? <ActivityIndicator/> : 
+            <FlatList data={workoutPlans} renderItem={renderItem} refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+            } />}          
         </View>
     );
 }

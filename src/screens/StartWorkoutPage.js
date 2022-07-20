@@ -9,25 +9,6 @@ import { db } from '../../firebase';
 import BicycleImage from "../assets/bicycle.png";
 import RunningShoesImage from "../assets/running_shoes.png";
 import SwimmerImage from "../assets/swimmer.png";
-import { NavigationContainer } from '@react-navigation/native';
-
-const workoutPlans = [
-    {
-        mainTitle: "HIIT 1",
-        subTitle: "30 Minutes",
-        content: "40 Burpees"
-    },
-    {
-        mainTitle: "Back day",
-        subTitle: "1 Hour",
-        content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
-    },
-    {
-        mainTitle: "Arm day",
-        subTitle: "1 Hour",
-        content: "5x5 Deadlifts\n 3x8 Lat Pulldowns"
-    }
-];
 
 export default function StartWorkoutPage({navigation}) {
     const [workoutPlans, setWorkoutPlans] = useState([]);
@@ -84,8 +65,7 @@ export default function StartWorkoutPage({navigation}) {
                     <View style={styles.icon}>
                         <Image source={BicycleImage} style={styles.image}/>
                     </View>
-                </Pressable>
-                
+                </Pressable>               
                 <View style={styles.icon}>
                     <Image source={RunningShoesImage} style={styles.image}/>
                 </View>
@@ -115,7 +95,7 @@ const styles = StyleSheet.create({
     carousel: {
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingVertical: 30,
+        paddingVertical: 10,
     },
     icon: {
         alignItems: 'center',
