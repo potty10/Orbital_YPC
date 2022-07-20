@@ -97,7 +97,7 @@ export default function ToDo({ navigation }) {
   return (
     <SafeAreaView>
       <View style={[AppStyles.rowContainer, AppStyles.rightAligned, AppStyles.rightMargin, AppStyles.topMargin]}>
-        <InlineTextButton text="Manage Account" color="#258ea6" onPress={() => navigation.navigate("ManageAccount")}/>
+        <InlineTextButton text="Manage Account" color="#258ea6" onPress={() => navigation.navigate("Manage Account")}/>
       </View>
       <Modal
         animationType="slide"

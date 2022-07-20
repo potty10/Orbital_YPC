@@ -42,13 +42,12 @@ export default function ManageAccount({ navigation }) {
 
         // Get all todos for user and delete
         let batch = writeBatch(db);
-        const q = query(collection(db, "todos"), where("userId", "==", user.uid));
+        const q = query(collection(db, "user_workouts"), where("userId", "==", user.uid));
         getDocs(q).then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             batch.delete(doc.ref);
           });
-          batch.commit();
-  
+          batch.commit(); 
           deleteUser(user).then(() => {
             navigation.popToTop();
           }).catch((error) => {
@@ -80,7 +79,6 @@ export default function ManageAccount({ navigation }) {
       <Button title="Update Password" onPress={updateUserPassword} />
       <Button title="Delete User" onPress={deleteUserAndToDos} />
       <Button title="Logout" onPress={logout} />
-      <Button title="Back to ToDos" onPress={() => navigation.pop()} />
     </View>
   );
 }

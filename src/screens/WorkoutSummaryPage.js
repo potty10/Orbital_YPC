@@ -16,7 +16,7 @@ function Card({ item }) {
   }
 
 export default function WorkoutSummaryPage({navigation}) {
-    const workoutTitle = `New Workout (${(new Date()).toLocaleDateString('en-SG')})`
+    const workoutTitle = `Workout Completed (${(new Date()).toLocaleDateString('en-SG')})`
     const workoutContent = [ {exerciseName: "Running"}]
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useAuthentication()
@@ -59,10 +59,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start" // Default value
     },
     header: {
-        marginBottom: 5, 
-        fontSize: 24, 
         marginBottom: 20, 
-        marginTop: 20
+        fontSize: 20, 
     },
     buttonRow: {
         flexDirection: 'row',
@@ -74,8 +72,6 @@ const styles = StyleSheet.create({
 const cardStyle = StyleSheet.create({
     container: {
       backgroundColor: '#fff',
-      borderBottomWidth: 1,
-      borderTopWidth: 1,
       padding: 5,
     },
     header: {
