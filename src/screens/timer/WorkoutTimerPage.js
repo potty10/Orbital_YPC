@@ -12,36 +12,83 @@ export default function WorkoutTimerPage({ navigation }) {
   const dispatch = useDispatch();
   const currentWorkout = useSelector(state => state.currentWorkout)
   const {mainTitle, content} = mapDocumentToUi(currentWorkout)
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  // const [timeState, setTimeState] = useState({
+  //   startTime: null, 
+  //   elapsedSeconds: 0,// Duration between startTime and current time
+  //   totalSeconds: 0,
+  //   isActive: false,
+  //   intervalId: null
+  // })
+  const [elapsedSeconds, setElapsedSeconds] = useState(0); // Duration between startTime and current time
+  const [totalSeconds, setTotalSeconds] = useState(0) // Total seconds before the latest start
   const [isActive, setIsActive] = useState(false);
-  const [startTime, setStartTime] = useState(null)
+  const [startTime, setStartTime] = useState(null) // Time of latest start
+  const [intervalId, setIntervalId] = useState()
   let interval = null; // Id of setInterval
 
+  // let getStartTime = () => {
+  //   return startTime
+  // }
+
   const toggle = () => {
-    if (!isActive) setStartTime(new Date());
-    else setStartTime(null);
+    //Pause
+    // if (timeState.isActive) {
+
+    // }
+    // if (isActive) {
+    //   console.log("-----Pause")
+    //   console.log("StartTime: ", startTime)
+    //   setTotalSeconds(start => start + elapsedSeconds)
+    //   clearInterval(interval)
+    //   setElapsedSeconds(0)
+    // } else { // resume   
+    //   console.log("-----resume")
+    //   console.log("Currnt time: ", new Date())
+    //   setStartTime(new Date())
+    //   console.log("New startTime:", startTime)
+    //   interval = setInterval(()=> {
+    //     console.log("Current time", new Date())
+    //     console.log(startTime)
+    //     setElapsedSeconds(() => ( new Date() - getStartTime()) / 1000);
+    //   }, 1000);
+    // }
     setIsActive(!isActive);
   }
 
   const reset = () => {
+    console.log("-----reset")
     setElapsedSeconds(0);
-    
+    setIsActive(false) 
+    setTotalSeconds(0)
+    clearInterval(intervalId)
   }
 
   const completeWorkout = () => {
-    dispatch(setCurrentWorkout({workoutDuration: elapsedSeconds}))
+    setIsActive(false)
+    dispatch(setCurrentWorkout({workoutDuration: totalSeconds + elapsedSeconds}))
     navigation.navigate('Workout Summary')
   }
 
-  useEffect(() => {
-    
+  // useEffect(() => {
+  //   return () => clearInterval(interval)
+  // })
+
+  useEffect(() => { 
+    // Start
     if (isActive) {
+      const newStartTime = new Date()
       interval = setInterval(()=> {
-        setElapsedSeconds(( new Date() - startTime) / 1000);
+        setElapsedSeconds(( new Date() - newStartTime) / 1000);
       }, 1000);
-    } else if (!isActive && elapsedSeconds !== 0) {
-      setStartTime(null)
+      setIntervalId(interval)
+    // Pause or reset
+    } else if (!isActive) {
+      console.log("total seconds", totalSeconds)
+      console.log("Elapsed seconds", elapsedSeconds)
       clearInterval(interval);
+      setTotalSeconds(start => start + elapsedSeconds)
+      setElapsedSeconds(0)
     }
     return () => clearInterval(interval);
   }, [isActive]);
@@ -68,6 +115,8 @@ export default function WorkoutTimerPage({ navigation }) {
   //   }
   // }, [isFocused])
 
+  console.log("total seconds", totalSeconds)
+  console.log("Elapsed seconds", elapsedSeconds)
   return (
     <View style={styles.container}>
       <View style={{flex: 2, padding: 30, alignItems: 'center'}}>
@@ -75,7 +124,7 @@ export default function WorkoutTimerPage({ navigation }) {
         <Text>{content}</Text>
       </View>
       <View style={{flex: 3, justifyContent: 'space-evenly', alignItems: 'center'}}>
-      <Text style={styles.timerText}>{secondToHHMMSS(elapsedSeconds)}</Text>
+      <Text style={styles.timerText}>{secondToHHMMSS(totalSeconds + elapsedSeconds)}</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={toggle} style={styles.button}>
             <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
