@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Alert, Pressable, TextInput, Button, ScrollView
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { useAuthentication, db } from '../../firebase';
 import { useIsFocused } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Card({ item }) {
   return (
@@ -17,8 +18,9 @@ function Card({ item }) {
 // https://reactnavigation.org/docs/5.x/header-buttons/
 // Under the section: Header interaction with its screen component
 export default function CreateWorkoutPage({ navigation, route }) {
-  const [workoutTitle, setWorkoutTitle] = useState('');
-  const [exerciseList, setExerciseList] = useState([])
+  // const { workoutContent, workoutTitle } = useSelector(state => state.editedWorkout)
+  const [workoutTitle, setWorkoutTitle] = useState('');  
+  const [ exerciseList, setExerciseList ] = useState([])
   const { user } = useAuthentication()
 
   //https://stackoverflow.com/questions/70963093/is-there-a-way-to-trigger-usefocuseffect-every-time-the-screen-gets-focused-with
@@ -37,24 +39,39 @@ export default function CreateWorkoutPage({ navigation, route }) {
   }, [isFocused])
 
   const addWorkoutToDb = async () => {
-    let newEntry = {
-      workoutTitle: workoutTitle ? workoutTitle : `New Workout (${(new Date()).toLocaleDateString('en-SG')})`,
-      workoutContent: exerciseList,
-      userId: user.uid
-    };
-    const docRef = await addDoc(collection(db, "user_workouts"), newEntry); 
-    Alert.alert("Workout Created", null, [
-      { text: "OK", onPress: () => navigation.navigate("Workout List") }
-    ])
-    // toDoToSave.id = docRef.id;
-    // let updatedToDos = [...toDos];
-    // updatedToDos.push(toDoToSave);
-    // setToDos(updatedToDos);
+    if (exerciseList.length === 0) {
+      Alert.alert("Empty workout is not allowed", null, [
+        { text: "OK" }
+      ])
+    } else {
+      let newEntry = {
+        // workoutTitle: workoutTitle ? workoutTitle : `New Workout (${(new Date()).toLocaleDateString('en-SG')})`,
+        workoutTitle: workoutTitle ? workoutTitle : `New Workout`,
+        workoutContent: exerciseList,
+        userId: user.uid
+      };
+      try {
+        const docRef = await addDoc(collection(db, "user_workouts"), newEntry); 
+        Alert.alert("Workout Created", null, [
+          { text: "OK", onPress: () => navigation.navigate("Workout List") }
+        ])
+      } catch (error) {
+        console.log(error)
+      } 
+    }   
   };
 
   const repeatLastWorkout = () => {
+    if (exerciseList.length > 0) {
+      setExerciseList(oldList => {
+        return [...oldList, {...oldList[oldList.length - 1]}]
+      })
+    } 
+  }
+
+  const deleteLastWorkout = () => {
     setExerciseList(oldList => {
-      return [...oldList, {...oldList[oldList.length - 1]}]
+      return oldList.slice(0, -1)
     })
   }
   
@@ -66,9 +83,11 @@ export default function CreateWorkoutPage({ navigation, route }) {
         {exerciseList.map(item => <Card item={item} />)}
         {/* <FlatList data={exerciseList} renderItem={({ item, index }) => (<Card item={item} />)} /> */}
         <View style={styles.buttonStyle}>
+        {/* <Button title='New Set'/> */}
+        <Button title='Delete' onPress={() => deleteLastWorkout()}/>
         <Button title='Repeat' onPress={() => repeatLastWorkout()}/>
         <Button title='Add New' onPress={() => navigation.navigate("Search Workout")}/>
-        <Button title='New Set'/>
+        
       </View>
       <View style={styles.buttonStyle}>
         <Button title='Cancel' onPress={() => navigation.goBack()}/>

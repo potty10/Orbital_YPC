@@ -119,12 +119,16 @@ const styles = StyleSheet.create({
     item: {
         marginVertical: 10,
         flexDirection: 'row',
-        alignItems: 'center'
     },
     card: {
         flex: 1
     },
     deleteButton: {
-        marginHorizontal: 10
+        paddingHorizontal: 10,
+        backgroundColor: 'orange',
+        justifyContent: 'center',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderRightWidth: 1
     }
 });

@@ -16,23 +16,38 @@ import { FAB, Icon } from "@rneui/themed";
 
 const completeWorkoutList = [
   {
-    mainTitle: "Bench Press"
+    mainTitle: "Arnold Press (Dumbbell)",
   },
   {
-    mainTitle: "Squats",
-  },
-  {
-    mainTitle: "Deadlift",
+    mainTitle: "Back extension (Machine)",
   },
   {
     mainTitle: "Barbell Row",
   },
   {
-    mainTitle: 'Romanian Deadlift',
+    mainTitle: "Bench Press"
+  },
+  {
+    mainTitle: "Bent Over One Arm Row (Dumbbell)",
+  },
+  {
+    mainTitle: "Bent Over Row",
   },
   {
     mainTitle: "Bicep Curl",
   },
+  {
+    mainTitle: "Deadlift",
+  },
+  {
+    mainTitle: "Hammer Curl",
+  },
+  {
+    mainTitle: 'Romanian Deadlift',
+  },
+  {
+    mainTitle: "Squats",
+  }, 
 ].map(item => ({ ...item, lowerCase: item.mainTitle.toLowerCase() }))
 
 
@@ -82,7 +97,7 @@ export default function SearchWorkoutPage({ navigation, route }) {
             <Text style={[cardStyle.header]}>{item?.mainTitle}</Text>
             <View>
               <View style={cardStyle.row}>
-                <Text>Weight: </Text>
+                <Text>{"Weight (kg): "}</Text>
                 <Counter counterValue={exerciseWeight} setCounterValue={setExerciseWeight}/>
               </View>
               <View style={cardStyle.row}>

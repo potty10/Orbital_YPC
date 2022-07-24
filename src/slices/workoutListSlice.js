@@ -39,7 +39,7 @@ export const deleteWorkoutById = createAsyncThunk('workoutList/deleteWorkoutById
   }
 });
 
-export const addWorkout = createAsyncThunk('workoutList/loadAllWorkouts', async () => {
+export const addWorkout = createAsyncThunk('workoutList/addWorkout', async () => {
   const auth = getAuth()
   const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
   const querySnapshot = await getDocs(q);
