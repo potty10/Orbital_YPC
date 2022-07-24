@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
+import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text} from 'react-native';
 import Card from '../components/Card';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
@@ -10,6 +10,7 @@ export default function ListWorkoutPage({navigation}) {
     const [workoutPlans, setWorkoutPlans] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
+    const [isEditingMode, setIsEditingMode] = useState(false)
     const auth = getAuth()
 
     // Input: Object with workoutContet, workoutTitle
@@ -46,6 +47,21 @@ export default function ListWorkoutPage({navigation}) {
         setIsLoading(false);
     }, [])
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+          headerRight: () => (        
+            <View style={{flexDirection: 'row'}}>
+                <Pressable onPress={() => setIsEditingMode(isEditingMode => !isEditingMode)} style={{ marginRight: 26 }}>
+                    <Text>{isEditingMode? "Done": "Edit"}</Text>
+                </Pressable>
+                <Pressable onPress={() => navigation.navigate('Create Workout')} style={{ marginRight: 26 }}>
+                    <Text>Create</Text>
+                </Pressable>
+            </View>           
+          ),
+        });
+      }, [navigation, isEditingMode])
+    
     const onRefresh = useCallback(() => {
         setRefreshing(true)
         loadAllWorkouts()
@@ -53,15 +69,20 @@ export default function ListWorkoutPage({navigation}) {
     })
 
     const renderItem = ({ item }) => (
-        <Pressable><Card style={styles.card} item={item} /></Pressable>
+        <View style={styles.item}>
+            <Pressable style={styles.card}><Card item={item} /></Pressable>
+            {isEditingMode && <Pressable style={styles.deleteButton}><Text>Delete</Text></Pressable>}
+        </View>      
     )
 
     return (
         <View style={styles.container}>
+            <Text>{isEditingMode? "editing now": "NOt edtiting"}</Text>
             {isLoading ? <ActivityIndicator/> : 
             <FlatList data={workoutPlans} renderItem={renderItem} refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
-            } />}          
+            } />}   
+       
         </View>
     );
 }
@@ -74,7 +95,15 @@ const styles = StyleSheet.create({
         alignItems: "stretch", // Default value, width of items stretch to fit container width
         justifyContent: "flex-start" // Default value
     },
-    card: {
+    item: {
         marginVertical: 10,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    card: {
+        flex: 1
+    },
+    deleteButton: {
+        marginHorizontal: 10
     }
 });

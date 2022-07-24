@@ -21,7 +21,7 @@ import StartWorkoutPage from './src/screens/StartWorkoutPage';
 import SearchWorkoutPage from './src/screens/SearchWorkoutPage';
 import WorkoutTimerPage from './src/screens/timer/WorkoutTimerPage';
 import WorkoutSummaryPage from './src/screens/WorkoutSummaryPage';
-
+import ToDo from './src/screens/ToDo';
 // Firebase
 import { useAuthentication } from './firebase';
 
@@ -55,7 +55,7 @@ export default function App() {
             <Stack.Screen name="Workout Main" options={{ headerShown: false }} children={() => (
               <Drawer.Navigator initialRouteName="Feed">
                 <Drawer.Screen name="Feed" component={UserFeedPage} />
-                <Drawer.Screen
+                {/* <Drawer.Screen
                   name="Workout List"
                   component={ListWorkoutPage}
                   options={({ navigation }) => ({
@@ -65,10 +65,10 @@ export default function App() {
                         <Text>Create</Text>
                       </Pressable>
                     ),
-                  })} />
-                {/* <Drawer.Screen name="Workout List" component={ListWorkoutPage} /> */}
+                  })} /> */}
+                <Drawer.Screen name="Workout List" component={ListWorkoutPage} />
                 <Drawer.Screen name="Start Workout" component={StartWorkoutPage} />
-                {/* <Drawer.Screen name="ToDo" component={ToDo} /> */}
+                <Drawer.Screen name="ToDo" component={ToDo} />
                 <Drawer.Screen name="Manage Account" component={ManageAccount} />
               </Drawer.Navigator>
             )} />
