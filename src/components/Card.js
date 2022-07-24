@@ -38,7 +38,7 @@ export const mapDocumentToUi = (document) => {
   })
   return {
       mainTitle: document.workoutTitle,
-      subTitle: document.workoutDuration && msToTime(document.workoutDuration),
+      subTitle: document.workoutDuration >= 0 && msToTime(document.workoutDuration),
       content: content
   }
 }
