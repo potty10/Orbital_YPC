@@ -27,7 +27,7 @@ export default function SignUp({ navigation }) {
     if (password === confirmPassword) {
       try {
         await createUserWithEmailAndPassword(auth, email, password)
-        navigation.navigate("ToDo")
+        navigation.navigate("Feed")
       } catch (error ) {
         setValidationMessage(error.message);
       }
