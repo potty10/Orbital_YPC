@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import { useDispatch } from 'react-redux';
-import { StyleSheet, Text, View, FlatList, Pressable, Image, ActivityIndicator } from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { StyleSheet, Text, View, FlatList, Pressable, Image, RefreshControl, ActivityIndicator } from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
 
 // Redux
-import {setCurrentWorkout} from '../slices/currentWorkoutSlice'
+import { setCurrentWorkout } from '../slices/currentWorkoutSlice'
+import { loadAllWorkouts } from '../slices/workoutListSlice';
 
 // Components
 import Card, { mapDocumentToUi } from '../components/Card';
@@ -18,23 +19,29 @@ import SwimmerImage from "../assets/swimmer.png";
 
 export default function StartWorkoutPage({navigation}) {
     const dispatch = useDispatch();
-    const [workoutPlans, setWorkoutPlans] = useState([]);
-    const [isLoading, setIsLoading] = useState(true)
+    const { workoutList, isLoading } = useSelector(state => state.workoutList)
+    console.log("Getting data", workoutList)
+    // console.log("workoutList", workoutList)
+    // console.log("isLoading", isLoading)
+    // const [workoutList, setWorkoutList] = useState([]);
+    // const [isLoading, setIsLoading] = useState(true)
+    const [refreshing, setRefreshing] = useState(false)
     const auth = getAuth()
 
-    const loadAllWorkouts = async () => {
-        const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
-        const querySnapshot = await getDocs(q);
-        const newWorkoutPlans = []
-        querySnapshot.forEach(doc => {
-            newWorkoutPlans.push(doc.data())
-        })
-        setWorkoutPlans(newWorkoutPlans);
-    };
+    // const loadAllWorkouts = async () => {
+    //     const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
+    //     const querySnapshot = await getDocs(q);
+    //     const newWorkoutPlans = []
+    //     querySnapshot.forEach(doc => {
+    //         newWorkoutPlans.push(doc.data())
+    //     })
+    //     setWorkoutList(newWorkoutPlans);
+    // };
 
     useEffect(() => {
-        loadAllWorkouts();
-        setIsLoading(false);
+        // loadAllWorkouts()
+        dispatch(loadAllWorkouts());
+        // setIsLoading(false);
     }, [])
 
     const startWorkout = (workoutItem) => {
@@ -42,11 +49,20 @@ export default function StartWorkoutPage({navigation}) {
         navigation.navigate('Timer Workout')
     }
 
-    const renderItem = ({ item }) => (
-        <Pressable onPress={() => startWorkout({workoutContent: item.workoutContent, workoutTitle: item.workoutTitle})}>
-            <Card style={styles.card} item={mapDocumentToUi(item)}/>
-        </Pressable>
-    )
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        //loadAllWorkouts()
+        dispatch(loadAllWorkouts());
+        setRefreshing(false)
+    })
+
+    const renderItem = ({ item }) => {
+        return (
+            <Pressable onPress={() => startWorkout({workoutContent: item.workoutContent, workoutTitle: item.workoutTitle})}>
+                <Card style={styles.card} item={mapDocumentToUi(item)}/>
+            </Pressable>
+        )
+    }
 
 
     return (
@@ -70,7 +86,9 @@ export default function StartWorkoutPage({navigation}) {
                 </Pressable>               
             </View>
             <Text style={styles.title}>Workout Plans</Text>         
-            {isLoading ? <ActivityIndicator/> : <FlatList data={workoutPlans} renderItem={renderItem} />}
+            {isLoading ? <ActivityIndicator/> : <FlatList data={workoutList} renderItem={renderItem} refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+            }/>}
         </View>
     );
 }

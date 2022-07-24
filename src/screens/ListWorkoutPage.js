@@ -1,50 +1,58 @@
 import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text} from 'react-native';
-import Card from '../components/Card';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
 
+// Redux
+import { loadAllWorkouts } from '../slices/workoutListSlice';
+
+// Components
+import Card, { mapDocumentToUi } from '../components/Card';
 
 export default function ListWorkoutPage({navigation}) {
-    const [workoutPlans, setWorkoutPlans] = useState([]);
-    const [isLoading, setIsLoading] = useState(true)
+    const dispatch = useDispatch();
+    const { workoutList, isLoading } = useSelector(state => state.workoutList)
+    // const [workoutPlans, setWorkoutPlans] = useState([]);
+    // const [isLoading, setIsLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [isEditingMode, setIsEditingMode] = useState(false)
     const auth = getAuth()
 
     // Input: Object with workoutContet, workoutTitle
     // Output: Object with mainTitle, subTitle, content
-    const mapDocumentToUi = (document) => {
-        let content = ""
-        document.workoutContent.forEach(exercise => {
-            content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
-        })
-        return {
-            mainTitle: document.workoutTitle,
-            subTitle: document?.workoutDuration,
-            content: content
-        }
-    }
+    // const mapDocumentToUi = (document) => {
+    //     let content = ""
+    //     document.workoutContent.forEach(exercise => {
+    //         content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
+    //     })
+    //     return {
+    //         mainTitle: document.workoutTitle,
+    //         subTitle: document?.workoutDuration,
+    //         content: content
+    //     }
+    // }
 
-    let loadAllWorkouts = async () => {
-        const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
+    // let loadAllWorkouts = async () => {
+    //     const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
     
-        const querySnapshot = await getDocs(q);
-        let exerciseList = [];
-        querySnapshot.forEach((doc) => {
-          let workoutItem = mapDocumentToUi(doc.data());
-          exerciseList.push(workoutItem);
-        });   
-        setWorkoutPlans(exerciseList);
+    //     const querySnapshot = await getDocs(q);
+    //     let exerciseList = [];
+    //     querySnapshot.forEach((doc) => {
+    //       let workoutItem = mapDocumentToUi(doc.data());
+    //       exerciseList.push(workoutItem);
+    //     });   
+    //     setWorkoutPlans(exerciseList);
         
-        // setIsRefreshing(false);
-    };
+    //     // setIsRefreshing(false);
+    // };
 
     // TODO: Load data from database
     useEffect(() => {
-        loadAllWorkouts();
-        setIsLoading(false);
+        dispatch(loadAllWorkouts());
+        // loadAllWorkouts();
+        // setIsLoading(false);
     }, [])
 
     useLayoutEffect(() => {
@@ -64,22 +72,23 @@ export default function ListWorkoutPage({navigation}) {
     
     const onRefresh = useCallback(() => {
         setRefreshing(true)
-        loadAllWorkouts()
+        // loadAllWorkouts()
+        dispatch(loadAllWorkouts());
         setRefreshing(false)
     })
 
     const renderItem = ({ item }) => (
         <View style={styles.item}>
-            <Pressable style={styles.card}><Card item={item} /></Pressable>
+            <Pressable style={styles.card}><Card item={mapDocumentToUi(item)} /></Pressable>
             {isEditingMode && <Pressable style={styles.deleteButton}><Text>Delete</Text></Pressable>}
         </View>      
     )
 
     return (
         <View style={styles.container}>
-            <Text>{isEditingMode? "editing now": "NOt edtiting"}</Text>
+            <Text>{isEditingMode? "editing now": "Not edtiting"}</Text>
             {isLoading ? <ActivityIndicator/> : 
-            <FlatList data={workoutPlans} renderItem={renderItem} refreshControl={
+            <FlatList data={workoutList} renderItem={renderItem} refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
             } />}   
        
