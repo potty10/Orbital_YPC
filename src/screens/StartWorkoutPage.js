@@ -20,9 +20,6 @@ import SwimmerImage from "../assets/swimmer.png";
 export default function StartWorkoutPage({navigation}) {
     const dispatch = useDispatch();
     const { workoutList, isLoading } = useSelector(state => state.workoutList)
-    console.log("Getting data", workoutList)
-    // console.log("workoutList", workoutList)
-    // console.log("isLoading", isLoading)
     // const [workoutList, setWorkoutList] = useState([]);
     // const [isLoading, setIsLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
@@ -50,6 +47,7 @@ export default function StartWorkoutPage({navigation}) {
     }
 
     const onRefresh = useCallback(() => {
+        console.log("Loading now", isLoading)
         setRefreshing(true)
         //loadAllWorkouts()
         dispatch(loadAllWorkouts());

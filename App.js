@@ -80,8 +80,8 @@ export default function App() {
 
         ) : (
           <Stack.Navigator>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+            <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
             <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
           </Stack.Navigator>
         )

@@ -6,7 +6,7 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
 
 // Redux
-import { loadAllWorkouts } from '../slices/workoutListSlice';
+import { loadAllWorkouts, deleteWorkoutById } from '../slices/workoutListSlice';
 
 // Components
 import Card, { mapDocumentToUi } from '../components/Card';
@@ -80,7 +80,10 @@ export default function ListWorkoutPage({navigation}) {
     const renderItem = ({ item }) => (
         <View style={styles.item}>
             <Pressable style={styles.card}><Card item={mapDocumentToUi(item)} /></Pressable>
-            {isEditingMode && <Pressable style={styles.deleteButton}><Text>Delete</Text></Pressable>}
+            {isEditingMode && 
+                <Pressable onPress={() => dispatch(deleteWorkoutById(item.workoutId))} 
+                    style={styles.deleteButton}><Text>Delete</Text></Pressable>
+            }
         </View>      
     )
 
