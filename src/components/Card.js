@@ -14,10 +14,10 @@ export default function Card({style, item}) {
         <View style={styles.header}>
             <Text>{item?.mainTitle}</Text>
             {item.subTitle && (
-              <>
+              <View style={{flexDirection: 'row'}}>
                 <Text>{item?.subTitle}</Text>
-                <Image source={clockImage} style={{height: 20, width: 20}}/>
-              </>            
+                <Image source={clockImage} style={{height: 20, width: 20, marginLeft: 10}}/>
+              </View>            
             )}           
         </View>
         <View style={styles.content}>

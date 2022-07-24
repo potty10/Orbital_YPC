@@ -68,7 +68,7 @@ export default function App() {
                   })} /> */}
                 <Drawer.Screen name="Workout List" component={ListWorkoutPage} />
                 <Drawer.Screen name="Start Workout" component={StartWorkoutPage} />
-                <Drawer.Screen name="ToDo" component={ToDo} />
+                {/* <Drawer.Screen name="ToDo" component={ToDo} /> */}
                 <Drawer.Screen name="Manage Account" component={ManageAccount} />
               </Drawer.Navigator>
             )} />
