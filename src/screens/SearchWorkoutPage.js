@@ -157,8 +157,8 @@ const cardStyle = StyleSheet.create({
     alignItems: 'flex-start'
   },
   selected: {
-    shadowOffset: { width: 0, height: 100 },
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 3,
     shadowOpacity: 0.8,
     // elevation property for Android
     // https://stackoverflow.com/questions/44908580/react-native-shadow-not-appearing

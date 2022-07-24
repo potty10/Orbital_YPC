@@ -34,6 +34,7 @@ export const deleteWorkoutById = createAsyncThunk('workoutList/deleteWorkoutById
     await deleteDoc(doc(db, "user_workouts", workoutId));
     return workoutId
   } catch(err) {
+    // Properties code, message, name
     return rejectWithValue(err);
   }
 });
@@ -61,7 +62,8 @@ const workoutListSlice = createSlice({
   name: "workoutList",
   initialState: {
       workoutList: [],
-      isLoading: false
+      isLoading: false,
+      error: ""
   },
   reducers: {},
   extraReducers: builder => {
@@ -74,6 +76,20 @@ const workoutListSlice = createSlice({
     })
     builder.addCase(loadAllWorkouts.rejected, state => {
       state.loading = false
+      state.error = action.payload.message;
+    })
+    builder.addCase(deleteWorkoutById.pending, state => {
+      state.loading = true
+    })
+    builder.addCase(deleteWorkoutById.fulfilled, (state, action) => {
+      state.workoutList = state.workoutList.filter((item) => item.workoutId !== action.payload);
+      // let updatedToDos = [...toDos].filter((item) => item.id != toDoId);
+      // state.workoutList = action.payload
+      state.loading = false
+    })
+    builder.addCase(deleteWorkoutById.rejected, state => {
+      state.loading = false
+      state.error = action.payload.message;
     })
   }
 });

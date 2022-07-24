@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text} from 'react-native';
+import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text, Alert} from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
@@ -77,19 +77,28 @@ export default function ListWorkoutPage({navigation}) {
         setRefreshing(false)
     })
 
+    const deleteWorkout = (workoutId) => {  
+        Alert.alert("Are you sure?", "Your workouts will be permanently deleted!", [
+            {
+              text: "Cancel",
+              style: "cancel"
+            },
+            { text: "OK", onPress: () => dispatch(deleteWorkoutById(workoutId))}
+        ])
+    }
     const renderItem = ({ item }) => (
         <View style={styles.item}>
             <Pressable style={styles.card}><Card item={mapDocumentToUi(item)} /></Pressable>
             {isEditingMode && 
-                <Pressable onPress={() => dispatch(deleteWorkoutById(item.workoutId))} 
-                    style={styles.deleteButton}><Text>Delete</Text></Pressable>
+                <Pressable onPress={() => deleteWorkout(item.workoutId)} style={styles.deleteButton}>
+                        <Text>Delete</Text>
+                </Pressable>
             }
         </View>      
     )
 
     return (
         <View style={styles.container}>
-            <Text>{isEditingMode? "editing now": "Not edtiting"}</Text>
             {isLoading ? <ActivityIndicator/> : 
             <FlatList data={workoutList} renderItem={renderItem} refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
