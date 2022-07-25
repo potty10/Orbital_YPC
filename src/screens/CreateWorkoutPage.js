@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { StyleSheet, Text, View, Alert, Pressable, TextInput, Button, ScrollView } from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { useAuthentication, db } from '../../firebase';
 import { useIsFocused } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEditedWorkout, clearEditedWorkout, setEditedWorkoutTitle, setEditedWorkoutContent} from '../slices/editedWorkoutSlice'
+import { clearEditedWorkout, setEditedWorkoutTitle, setEditedWorkoutContent} from '../slices/editedWorkoutSlice'
 
 function Card({ item }) {
   return (
@@ -19,7 +19,9 @@ function Card({ item }) {
 // https://reactnavigation.org/docs/5.x/header-buttons/
 // Under the section: Header interaction with its screen component
 export default function CreateWorkoutPage({ navigation, route }) {
+  const dispatch = useDispatch();
   const { workoutContent, workoutTitle } = useSelector(state => state.editedWorkout)
+  const [ clearWorkout, setClearWorkout] = useState(false)
   // const [workoutTitle, setWorkoutTitle] = useState('');  
   // const [ exerciseList, setExerciseList ] = useState([])
   const { user } = useAuthentication()
@@ -40,6 +42,14 @@ export default function CreateWorkoutPage({ navigation, route }) {
     }  
   }, [isFocused])
 
+  // Without this method, dispatching clearEditedWorkout() would result in the rendering of
+  // non-empty list -> empty list (We want to remove this) -> workout List
+  // We want to avoid rendering the empty list before navigating
+  useLayoutEffect(() => {
+    if (clearWorkout)
+      dispatch(clearEditedWorkout()) 
+  }, [clearWorkout])
+
   const addWorkoutToDb = async () => {
     if (workoutContent.length === 0) {
       Alert.alert("Empty workout is not allowed", null, [
@@ -53,9 +63,12 @@ export default function CreateWorkoutPage({ navigation, route }) {
         userId: user.uid
       };
       try {
-        const docRef = await addDoc(collection(db, "user_workouts"), newEntry); 
+        const docRef = await addDoc(collection(db, "user_workouts"), newEntry);         
         Alert.alert("Workout Created", null, [
-          { text: "OK", onPress: () => navigation.navigate("Workout List") }
+          { text: "OK", onPress: () => {  
+            navigation.navigate("Workout List")         
+            setClearWorkout(true)
+          }}
         ])
       } catch (error) {
         console.log(error)
@@ -78,11 +91,12 @@ export default function CreateWorkoutPage({ navigation, route }) {
     //   return oldList.slice(0, -1)
     // })
   }
+
   
   return (
     <View style={styles.container}>
       <TextInput style={{marginBottom: 5, fontSize: 24, marginBottom: 20, marginTop: 20}} placeholder='Workout Title' value={workoutTitle}
-        textAlign={'center'} onChangeText={text => setEditedWorkoutTitle(text)} />    
+        textAlign={'center'} onChangeText={text => dispatch(setEditedWorkoutTitle(text))} />    
       <ScrollView>
         {workoutContent.map(item => <Card item={item} />)}
         {/* <FlatList data={exerciseList} renderItem={({ item, index }) => (<Card item={item} />)} /> */}
@@ -94,7 +108,10 @@ export default function CreateWorkoutPage({ navigation, route }) {
         
       </View>
       <View style={styles.buttonStyle}>
-        <Button title='Cancel' onPress={() => navigation.goBack()}/>
+        <Button title='Cancel' onPress={() => {
+          navigation.goBack()
+          setClearWorkout(true)       
+        }}/>
         <Button title='Create' onPress={addWorkoutToDb}/>
       </View>
       </ScrollView>     

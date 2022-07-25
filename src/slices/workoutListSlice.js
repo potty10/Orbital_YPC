@@ -28,34 +28,10 @@ export const loadAllWorkouts = createAsyncThunk('workoutList/loadAllWorkouts', a
   // });
 });
 
-export const deleteWorkoutById = createAsyncThunk('workoutList/deleteWorkoutById', async (workoutId, {rejectWithValue}) => {
-  try {
-    const auth = getAuth()
-    await deleteDoc(doc(db, "user_workouts", workoutId));
-    return workoutId
-  } catch(err) {
-    // Properties code, message, name
-    return rejectWithValue(err);
-  }
-});
-
-export const addWorkout = createAsyncThunk('workoutList/addWorkout', async () => {
-  const auth = getAuth()
-  const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
-  const querySnapshot = await getDocs(q);
-  let exerciseList = [];
-  querySnapshot.forEach((doc) => {
-    let workoutItem = doc.data();
-    workoutItem.workoutId = doc.id
-    exerciseList.push(workoutItem);
-  });  
-  return exerciseList
-  // Note: querySnapshot is not an array, DOES NOT have the map function
-  // return querySnapshot.map(doc => {
-  //   let item = doc.data()
-  //   item.id = doc.id
-  //   return item
-  // });
+export const deleteWorkoutById = createAsyncThunk('workoutList/deleteWorkoutById', async (workoutId) => {
+  // Firebase api does not return any errors if delete failed
+  await deleteDoc(doc(db, "user_workouts", workoutId));
+  return workoutId
 });
 
 const workoutListSlice = createSlice({
