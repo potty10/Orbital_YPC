@@ -1,30 +1,34 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Pressable, Button } from 'react-native';
-import { secondToHHMMSS } from '../../utils/DateTimeUtil';
+import React, {
+  useState, useEffect, useLayoutEffect, useCallback,
+} from 'react';
+import {
+  StyleSheet, Text, View, TouchableOpacity, Dimensions, Pressable, Button,
+} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import { secondToHHMMSS } from '../../utils/DateTimeUtil';
 
 // Redux
-import { setCurrentWorkout } from '../../slices/currentWorkoutSlice'
+import { setCurrentWorkout } from '../../slices/currentWorkoutSlice';
 import { mapDocumentToUi } from '../../components/Card';
 
 export default function WorkoutTimerPage({ navigation }) {
   const dispatch = useDispatch();
-  const currentWorkout = useSelector(state => state.currentWorkout)
-  const { mainTitle, content } = mapDocumentToUi(currentWorkout)
+  const currentWorkout = useSelector((state) => state.currentWorkout);
+  const { mainTitle, content } = mapDocumentToUi(currentWorkout);
 
   // const [timeState, setTimeState] = useState({
-  //   startTime: null, 
+  //   startTime: null,
   //   elapsedSeconds: 0,// Duration between startTime and current time
   //   totalSeconds: 0,
   //   isActive: false,
   //   intervalId: null
   // })
   const [elapsedSeconds, setElapsedSeconds] = useState(0); // Duration between startTime and current time
-  const [totalSeconds, setTotalSeconds] = useState(0) // Total seconds before the latest start
+  const [totalSeconds, setTotalSeconds] = useState(0); // Total seconds before the latest start
   const [isActive, setIsActive] = useState(false);
-  const [startTime, setStartTime] = useState(null) // Time of latest start
-  const [intervalId, setIntervalId] = useState()
+  const [startTime, setStartTime] = useState(null); // Time of latest start
+  const [intervalId, setIntervalId] = useState();
   let interval = null; // Id of setInterval
 
   // let getStartTime = () => {
@@ -32,7 +36,7 @@ export default function WorkoutTimerPage({ navigation }) {
   // }
 
   const toggle = () => {
-    //Pause
+    // Pause
     // if (timeState.isActive) {
 
     // }
@@ -42,7 +46,7 @@ export default function WorkoutTimerPage({ navigation }) {
     //   setTotalSeconds(start => start + elapsedSeconds)
     //   clearInterval(interval)
     //   setElapsedSeconds(0)
-    // } else { // resume   
+    // } else { // resume
     //   console.log("-----resume")
     //   console.log("Currnt time: ", new Date())
     //   setStartTime(new Date())
@@ -54,21 +58,21 @@ export default function WorkoutTimerPage({ navigation }) {
     //   }, 1000);
     // }
     setIsActive(!isActive);
-  }
+  };
 
   const reset = () => {
-    console.log("-----reset")
-    setIsActive(false)
-    setElapsedSeconds(0); 
-    setTotalSeconds(0)
-    clearInterval(intervalId)
-  }
+    console.log('-----reset');
+    setIsActive(false);
+    setElapsedSeconds(0);
+    setTotalSeconds(0);
+    clearInterval(intervalId);
+  };
 
   const completeWorkout = useCallback(() => {
-    setIsActive(false)
-    dispatch(setCurrentWorkout({ workoutDuration: totalSeconds + elapsedSeconds }))
-    navigation.navigate('Workout Summary')
-  }, [totalSeconds, elapsedSeconds])
+    setIsActive(false);
+    dispatch(setCurrentWorkout({ workoutDuration: totalSeconds + elapsedSeconds }));
+    navigation.navigate('Workout Summary');
+  }, [totalSeconds, elapsedSeconds]);
   // const completeWorkout = () => {
   //   setIsActive(false)
   //   console.log("-----Saving")
@@ -85,18 +89,18 @@ export default function WorkoutTimerPage({ navigation }) {
   useEffect(() => {
     // Start
     if (isActive) {
-      const newStartTime = new Date()
+      const newStartTime = new Date();
       interval = setInterval(() => {
         setElapsedSeconds((new Date() - newStartTime) / 1000);
       }, 1000);
-      setIntervalId(interval)
+      setIntervalId(interval);
       // Pause or reset
     } else if (!isActive) {
-      console.log("total seconds", totalSeconds)
-      console.log("Elapsed seconds", elapsedSeconds)
+      console.log('total seconds', totalSeconds);
+      console.log('Elapsed seconds', elapsedSeconds);
       clearInterval(interval);
-      setTotalSeconds(start => start + elapsedSeconds)
-      setElapsedSeconds(0)
+      setTotalSeconds((start) => start + elapsedSeconds);
+      setElapsedSeconds(0);
     }
     return () => clearInterval(interval);
   }, [isActive]);
@@ -123,7 +127,7 @@ export default function WorkoutTimerPage({ navigation }) {
 
   // When screen focuses
   // const isFocused = useIsFocused();
-  // useEffect(() => {  
+  // useEffect(() => {
   //   if (startTime) {
   //     clearInterval(interval);
   //     setElapsedSeconds((new Date() - startTime) / 1000)
@@ -133,7 +137,7 @@ export default function WorkoutTimerPage({ navigation }) {
   //   }
   // }, [isFocused])
 
-  let workoutDuration = totalSeconds + elapsedSeconds
+  const workoutDuration = totalSeconds + elapsedSeconds;
 
   return (
     <View style={styles.container}>
@@ -150,19 +154,21 @@ export default function WorkoutTimerPage({ navigation }) {
           <TouchableOpacity onPress={reset} style={[styles.button, styles.buttonReset]}>
             <Text style={[styles.buttonText, styles.buttonTextReset]}>Reset</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            console.log("-----Saving")
-            console.log("Total seconds", totalSeconds)
-            console.log("elapsedSeconds", elapsedSeconds)
-            setIsActive(false)
-            dispatch(setCurrentWorkout({ workoutDuration: workoutDuration }))
-            navigation.navigate('Workout Summary')
-          }} style={[styles.button, styles.buttonReset]}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('-----Saving');
+              console.log('Total seconds', totalSeconds);
+              console.log('elapsedSeconds', elapsedSeconds);
+              setIsActive(false);
+              dispatch(setCurrentWorkout({ workoutDuration }));
+              navigation.navigate('Workout Summary');
+            }}
+            style={[styles.button, styles.buttonReset]}
+          >
             <Text style={[styles.buttonText, styles.buttonTextReset]}>Done</Text>
           </TouchableOpacity>
         </View>
       </View>
-
 
       {/* <Pressable onPress={completeWorkout}>
         <Text style={[styles.buttonText, styles.buttonTextReset]}>Done</Text>
@@ -175,31 +181,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: "center",
-    justifyContent: "flex-start" // Default value
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Default value
   },
   buttonContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   button: {
     borderWidth: 10,
     borderColor: '#B9AAFF',
     borderRadius: 20,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonText: {
     fontSize: 45,
-    color: '#B9AAFF'
+    color: '#B9AAFF',
   },
   timerText: {
     fontSize: 60,
-    marginBottom: 20
+    marginBottom: 20,
   },
   buttonReset: {
-    borderColor: "#FF851B"
+    borderColor: '#FF851B',
   },
   buttonTextReset: {
-    color: "#FF851B"
-  }
+    color: '#FF851B',
+  },
 });

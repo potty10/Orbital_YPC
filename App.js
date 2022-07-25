@@ -7,9 +7,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 // React
-import { StyleSheet, Text, Pressable } from 'react-native';
+import React from 'react';
+import {
+  StyleSheet, Text, Pressable, LogBox,
+} from 'react-native';
 
 // Screens
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import ManageAccount from './src/screens/ManageAccount';
@@ -21,23 +26,26 @@ import StartWorkoutPage from './src/screens/StartWorkoutPage';
 import SearchWorkoutPage from './src/screens/SearchWorkoutPage';
 import WorkoutTimerPage from './src/screens/timer/WorkoutTimerPage';
 import WorkoutSummaryPage from './src/screens/WorkoutSummaryPage';
-import ToDo from './src/screens/ToDo';
+
 // Firebase
 import { useAuthentication } from './firebase';
 
 // Redux
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
 import currentWorkoutReducer from './src/slices/currentWorkoutSlice';
 import workoutListReducer from './src/slices/workoutListSlice';
 import editedWorkoutReducer from './src/slices/editedWorkoutSlice';
+// Ignore log notification by message
+LogBox.ignoreLogs(['Warning: ...']);
+
+// Ignore all log notifications
+LogBox.ignoreAllLogs();
 
 export const store = configureStore({
   reducer: {
     currentWorkout: currentWorkoutReducer,
     workoutList: workoutListReducer,
-    editedWorkout: editedWorkoutReducer 
-  }
+    editedWorkout: editedWorkoutReducer,
+  },
 });
 
 const Stack = createStackNavigator();
@@ -54,10 +62,13 @@ export default function App() {
       <NavigationContainer>
         {user ? (
           <Stack.Navigator>
-            <Stack.Screen name="Workout Main" options={{ headerShown: false }} children={() => (
-              <Drawer.Navigator initialRouteName="Feed">
-                <Drawer.Screen name="Feed" component={UserFeedPage} />
-                {/* <Drawer.Screen
+            <Stack.Screen
+              name="Workout Main"
+              options={{ headerShown: false }}
+              children={() => (
+                <Drawer.Navigator initialRouteName="Feed">
+                  <Drawer.Screen name="Feed" component={UserFeedPage} />
+                  {/* <Drawer.Screen
                   name="Workout List"
                   component={ListWorkoutPage}
                   options={({ navigation }) => ({
@@ -68,12 +79,12 @@ export default function App() {
                       </Pressable>
                     ),
                   })} /> */}
-                <Drawer.Screen name="Workout List" component={ListWorkoutPage} />
-                <Drawer.Screen name="Start Workout" component={StartWorkoutPage} />
-                {/* <Drawer.Screen name="ToDo" component={ToDo} /> */}
-                <Drawer.Screen name="Manage Account" component={ManageAccount} />
-              </Drawer.Navigator>
-            )} />
+                  <Drawer.Screen name="Workout List" component={ListWorkoutPage} />
+                  <Drawer.Screen name="Start Workout" component={StartWorkoutPage} />
+                  <Drawer.Screen name="Manage Account" component={ManageAccount} />
+                </Drawer.Navigator>
+              )}
+            />
             <Stack.Screen name="Create Workout" component={CreateWorkoutPage} />
             <Stack.Screen name="Search Workout" component={SearchWorkoutPage} />
             <Stack.Screen name="Timer Workout" component={WorkoutTimerPage} />
@@ -82,22 +93,12 @@ export default function App() {
 
         ) : (
           <Stack.Navigator>
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
-            <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
             <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
           </Stack.Navigator>
-        )
-        }
+        )}
       </NavigationContainer>
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
