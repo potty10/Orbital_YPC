@@ -65,9 +65,6 @@ export default function WorkoutTimerPage({ navigation }) {
   }
 
   const completeWorkout = useCallback(() => {
-    console.log("-----Saving")
-    console.log("Total seconds", totalSeconds)
-    console.log("elapsedSeconds", elapsedSeconds)
     setIsActive(false)
     dispatch(setCurrentWorkout({ workoutDuration: totalSeconds + elapsedSeconds }))
     navigation.navigate('Workout Summary')
@@ -104,25 +101,25 @@ export default function WorkoutTimerPage({ navigation }) {
     return () => clearInterval(interval);
   }, [isActive]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Pressable onPress={completeWorkout} style={{ marginRight: 26 }}>
-          <Text>Done</Text>
-        </Pressable>
-      ),
-    });
-  }, [navigation])
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <Pressable onPress={completeWorkout} style={{ marginRight: 26 }}>
+  //         <Text>Done</Text>
+  //       </Pressable>
+  //     ),
+  //   });
+  // }, [navigation])
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Pressable onPress={completeWorkout} style={{ marginRight: 26 }}>
-          <Text>Done</Text>
-        </Pressable>
-      ),
-    });
-  }, [navigation, startTime, elapsedSeconds])
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <Pressable onPress={completeWorkout} style={{ marginRight: 26 }}>
+  //         <Text>Done</Text>
+  //       </Pressable>
+  //     ),
+  //   });
+  // }, [navigation, startTime, elapsedSeconds])
 
   // When screen focuses
   // const isFocused = useIsFocused();

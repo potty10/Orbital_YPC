@@ -5,8 +5,8 @@ export default function SimpleCard({ item, style }) {
     return (
         <View style={[cardStyle.container, style]}>
             <Text style={cardStyle.header}>{item?.exerciseName}</Text>         
-            <Text>{item?.exerciseRepititions + ' reps'}</Text>
-            <Text>{item?.exerciseWeight + ' kg'}</Text>
+            <Text>{item?.exerciseRepititions && item?.exerciseRepititions + ' reps'}</Text>
+            <Text>{item?.exerciseWeight && item?.exerciseWeight + ' kg'}</Text>
         </View>
     );
 }

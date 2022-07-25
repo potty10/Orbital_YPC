@@ -30,11 +30,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import currentWorkoutReducer from './src/slices/currentWorkoutSlice';
 import workoutListReducer from './src/slices/workoutListSlice';
+import editedWorkoutReducer from './src/slices/editedWorkoutSlice';
 
 export const store = configureStore({
   reducer: {
     currentWorkout: currentWorkoutReducer,
-    workoutList: workoutListReducer
+    workoutList: workoutListReducer,
+    editedWorkout: editedWorkoutReducer 
   }
 });
 

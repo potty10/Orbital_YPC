@@ -1,9 +1,11 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet, Text, View, FlatList, Pressable, Image, RefreshControl, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, Image, RefreshControl, ActivityIndicator, Button } from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
 import { getAuth } from 'firebase/auth';
 import { db } from '../../firebase';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 // Redux
 import { setCurrentWorkout } from '../slices/currentWorkoutSlice'
@@ -20,6 +22,7 @@ import SwimmerImage from "../assets/swimmer.png";
 export default function StartWorkoutPage({navigation}) {
     const dispatch = useDispatch();
     const { workoutList, isLoading } = useSelector(state => state.workoutList)
+    const currentWorkout = useSelector(state => state.currentWorkout)
     // const [workoutList, setWorkoutList] = useState([]);
     // const [isLoading, setIsLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
@@ -47,7 +50,6 @@ export default function StartWorkoutPage({navigation}) {
     }
 
     const onRefresh = useCallback(() => {
-        console.log("Loading now", isLoading)
         setRefreshing(true)
         //loadAllWorkouts()
         dispatch(loadAllWorkouts());
@@ -62,9 +64,11 @@ export default function StartWorkoutPage({navigation}) {
         )
     }
 
-
     return (
         <View style={styles.container}>
+            {/* { currentWorkout.workoutContent.length > 0 && 
+                <Button title="Resume" onPress={() => navigation.navigate('Timer Workout')}/>
+            } */}
             <Text style={styles.title}>Aerobic exercises</Text>
             <View style={styles.carousel}>
                 <Pressable onPress={() => startWorkout({workoutContent: [{exerciseName: "Cycling"}]})}>

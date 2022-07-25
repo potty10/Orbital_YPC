@@ -1,54 +1,32 @@
 import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text, Alert} from 'react-native';
-import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore"; 
+import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text, Alert } from 'react-native';
+import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
-import { db } from '../../firebase';
+import { useIsFocused } from '@react-navigation/native';
 
 // Redux
+import { useDispatch, useSelector } from 'react-redux';
 import { loadAllWorkouts, deleteWorkoutById } from '../slices/workoutListSlice';
+import { setEditedWorkout, clearEditedWorkout } from '../slices/editedWorkoutSlice';
 
 // Components
 import Card, { mapDocumentToUi } from '../components/Card';
 
-export default function ListWorkoutPage({navigation}) {
+export default function ListWorkoutPage({ navigation }) {  
     const dispatch = useDispatch();
     const { workoutList, isLoading } = useSelector(state => state.workoutList)
-    // const [workoutPlans, setWorkoutPlans] = useState([]);
-    // const [isLoading, setIsLoading] = useState(true)
+    const { workoutContent, workoutTitle, workoutId } = useSelector(state => state.editedWorkout)
     const [refreshing, setRefreshing] = useState(false)
     const [isEditingMode, setIsEditingMode] = useState(false)
-    const auth = getAuth()
-
-    // Input: Object with workoutContet, workoutTitle
-    // Output: Object with mainTitle, subTitle, content
-    // const mapDocumentToUi = (document) => {
-    //     let content = ""
-    //     document.workoutContent.forEach(exercise => {
-    //         content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
-    //     })
-    //     return {
-    //         mainTitle: document.workoutTitle,
-    //         subTitle: document?.workoutDuration,
-    //         content: content
-    //     }
-    // }
-
-    // let loadAllWorkouts = async () => {
-    //     const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
     
-    //     const querySnapshot = await getDocs(q);
-    //     let exerciseList = [];
-    //     querySnapshot.forEach((doc) => {
-    //       let workoutItem = mapDocumentToUi(doc.data());
-    //       exerciseList.push(workoutItem);
-    //     });   
-    //     setWorkoutPlans(exerciseList);
-        
-    //     // setIsRefreshing(false);
-    // };
 
-    // TODO: Load data from database
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (isFocused && workoutId) {
+            dispatch(clearEditedWorkout())
+        }  
+    }, [isFocused])
+
     useEffect(() => {
         dispatch(loadAllWorkouts());
         // loadAllWorkouts();
@@ -57,19 +35,19 @@ export default function ListWorkoutPage({navigation}) {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-          headerRight: () => (        
-            <View style={{flexDirection: 'row'}}>
-                <Pressable onPress={() => setIsEditingMode(isEditingMode => !isEditingMode)} style={{ marginRight: 26 }}>
-                    <Text>{isEditingMode? "Done": "Edit"}</Text>
-                </Pressable>
-                <Pressable onPress={() => navigation.navigate('Create Workout')} style={{ marginRight: 26 }}>
-                    <Text>Create</Text>
-                </Pressable>
-            </View>           
-          ),
+            headerRight: () => (
+                <View style={{ flexDirection: 'row' }}>
+                    <Pressable onPress={() => setIsEditingMode(isEditingMode => !isEditingMode)} style={{ marginRight: 26 }}>
+                        <Text>{isEditingMode ? "Done" : "Edit"}</Text>
+                    </Pressable>
+                    <Pressable onPress={() => navigation.navigate('Create Workout')} style={{ marginRight: 26 }}>
+                        <Text>Create</Text>
+                    </Pressable>
+                </View>
+            ),
         });
-      }, [navigation, isEditingMode])
-    
+    }, [navigation, isEditingMode])
+
     const onRefresh = useCallback(() => {
         setRefreshing(true)
         // loadAllWorkouts()
@@ -77,33 +55,44 @@ export default function ListWorkoutPage({navigation}) {
         setRefreshing(false)
     })
 
-    const deleteWorkout = (workoutId) => {  
-        Alert.alert("Are you sure?", "Your workouts will be permanently deleted!", [
+    const deleteWorkout = (workoutId) => {
+        Alert.alert("Are you sure?", "This workout will be permanently deleted!", [
             {
-              text: "Cancel",
-              style: "cancel"
+                text: "Cancel",
+                style: "cancel",
             },
-            { text: "OK", onPress: () => dispatch(deleteWorkoutById(workoutId))}
+            { text: "OK", onPress: () => dispatch(deleteWorkoutById(workoutId)) }
         ])
     }
+
+    const editWorkout = (workoutItem) => {
+        dispatch(setEditedWorkout(workoutItem))
+        navigation.navigate('Create Workout')       
+    }
+
     const renderItem = ({ item }) => (
         <View style={styles.item}>
             <Pressable style={styles.card}><Card item={mapDocumentToUi(item)} /></Pressable>
-            {isEditingMode && 
-                <Pressable onPress={() => deleteWorkout(item.workoutId)} style={styles.deleteButton}>
+            {isEditingMode &&
+                <>
+                    <Pressable onPress={() => deleteWorkout(item.workoutId)} style={styles.deleteButton}>
                         <Text>Delete</Text>
-                </Pressable>
+                    </Pressable>
+                    <Pressable onPress={() => editWorkout(item)} style={styles.editButton}>
+                        <Text>Edit</Text>
+                    </Pressable>
+               </>
             }
-        </View>      
+        </View>
     )
 
     return (
         <View style={styles.container}>
-            {isLoading ? <ActivityIndicator/> : 
-            <FlatList data={workoutList} renderItem={renderItem} refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
-            } />}   
-       
+            {isLoading ? <ActivityIndicator /> :
+                <FlatList data={workoutList} renderItem={renderItem} refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                } />}
+
         </View>
     );
 }
@@ -119,12 +108,28 @@ const styles = StyleSheet.create({
     item: {
         marginVertical: 10,
         flexDirection: 'row',
-        alignItems: 'center'
     },
     card: {
-        flex: 1
+        flex: 4
     },
     deleteButton: {
-        marginHorizontal: 10
+        paddingHorizontal: 10,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderRightWidth: 1,
+        flex: 1
+    },
+    editButton: {
+        paddingHorizontal: 10,
+        backgroundColor: '#71a3f5',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderRightWidth: 1,
+        flex: 1
     }
 });

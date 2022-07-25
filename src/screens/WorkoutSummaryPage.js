@@ -16,7 +16,7 @@ export default function WorkoutSummaryPage({navigation}) {
     let saveWorkoutToHistory = async () => {
         setIsLoading(true)
         let newEntry = {
-            workoutTitle: `Completed: ${workoutTitle}`,
+            workoutTitle: `${(new Date()).toLocaleDateString('en-US')}: ${workoutTitle}`,
             workoutContent: workoutContent,
             workoutDuration: workoutDuration, //Number of milliseconds
             userId: user.uid,
