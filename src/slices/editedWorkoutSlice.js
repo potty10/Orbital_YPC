@@ -5,6 +5,8 @@ const editedWorkoutSlice = createSlice({
   initialState: {
     workoutTitle: "",
     workoutContent: [],
+    editingMode: "", // "EDIT" or "CREATE"
+    workoutId: "",   // Might be current edited workout or newly created workout
     // workoutDuration: 0, // in milliseconds
   },
   reducers: {

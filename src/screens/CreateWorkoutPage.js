@@ -20,8 +20,8 @@ function Card({ item }) {
 // Under the section: Header interaction with its screen component
 export default function CreateWorkoutPage({ navigation, route }) {
   const dispatch = useDispatch();
-  const { workoutContent, workoutTitle } = useSelector(state => state.editedWorkout)
-  const [ clearWorkout, setClearWorkout] = useState(false)
+  const { workoutContent, workoutTitle, workoutId } = useSelector(state => state.editedWorkout)
+  const screenMode = workoutId ? "EDITING" : "CREATING"
   // const [workoutTitle, setWorkoutTitle] = useState('');  
   // const [ exerciseList, setExerciseList ] = useState([])
   const { user } = useAuthentication()
@@ -42,14 +42,6 @@ export default function CreateWorkoutPage({ navigation, route }) {
     }  
   }, [isFocused])
 
-  // Without this method, dispatching clearEditedWorkout() would result in the rendering of
-  // non-empty list -> empty list (We want to remove this) -> workout List
-  // We want to avoid rendering the empty list before navigating
-  useLayoutEffect(() => {
-    if (clearWorkout)
-      dispatch(clearEditedWorkout()) 
-  }, [clearWorkout])
-
   const addWorkoutToDb = async () => {
     if (workoutContent.length === 0) {
       Alert.alert("Empty workout is not allowed", null, [
@@ -62,17 +54,35 @@ export default function CreateWorkoutPage({ navigation, route }) {
         workoutContent: workoutContent,
         userId: user.uid
       };
-      try {
-        const docRef = await addDoc(collection(db, "user_workouts"), newEntry);         
-        Alert.alert("Workout Created", null, [
-          { text: "OK", onPress: () => {  
-            navigation.navigate("Workout List")         
-            setClearWorkout(true)
-          }}
-        ])
-      } catch (error) {
-        console.log(error)
-      } 
+      const docRef = await addDoc(collection(db, "user_workouts"), newEntry);         
+      Alert.alert("Workout Created", null, [
+        { text: "OK", onPress: () => {                    
+          navigation.navigate("Workout List") 
+          dispatch(clearEditedWorkout())  
+        }}
+      ])
+    }   
+  };
+
+  const editWorkoutByItem = async() => {
+    if (workoutContent.length === 0) {
+      Alert.alert("Empty workout is not allowed", null, [
+        { text: "OK" }
+      ])
+    } else {
+      let newEntry = {
+        // workoutTitle: workoutTitle ? workoutTitle : `New Workout (${(new Date()).toLocaleDateString('en-SG')})`,
+        workoutTitle: workoutTitle ? workoutTitle : `New Workout`,
+        workoutContent: workoutContent,
+        userId: user.uid
+      };
+      const docRef = await setDoc(doc(db, "user_workouts", workoutId), newEntry);         
+      Alert.alert("Workout Edited", null, [
+        { text: "OK", onPress: () => {                    
+          navigation.navigate("Workout List") 
+          dispatch(clearEditedWorkout())  
+        }}
+      ])
     }   
   };
 
@@ -110,9 +120,12 @@ export default function CreateWorkoutPage({ navigation, route }) {
       <View style={styles.buttonStyle}>
         <Button title='Cancel' onPress={() => {
           navigation.goBack()
-          setClearWorkout(true)       
+          dispatch(clearEditedWorkout())       
         }}/>
-        <Button title='Create' onPress={addWorkoutToDb}/>
+        { screenMode === "EDITING" ? 
+          <Button title='Edit' onPress={editWorkoutByItem}/> : 
+          <Button title='Create' onPress={addWorkoutToDb}/>
+        }   
       </View>
       </ScrollView>     
     </View>

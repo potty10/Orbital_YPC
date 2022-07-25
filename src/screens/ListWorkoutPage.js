@@ -1,52 +1,31 @@
 import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, View, FlatList, Pressable, RefreshControl, ActivityIndicator, Text, Alert } from 'react-native';
 import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
-import { db } from '../../firebase';
+import { useIsFocused } from '@react-navigation/native';
 
 // Redux
+import { useDispatch, useSelector } from 'react-redux';
 import { loadAllWorkouts, deleteWorkoutById } from '../slices/workoutListSlice';
-import { setEditedWorkout } from '../slices/editedWorkoutSlice';
+import { setEditedWorkout, clearEditedWorkout } from '../slices/editedWorkoutSlice';
+
 // Components
 import Card, { mapDocumentToUi } from '../components/Card';
 
-export default function ListWorkoutPage({ navigation }) {
+export default function ListWorkoutPage({ navigation }) {  
     const dispatch = useDispatch();
     const { workoutList, isLoading } = useSelector(state => state.workoutList)
-    // const [workoutPlans, setWorkoutPlans] = useState([]);
-    // const [isLoading, setIsLoading] = useState(true)
+    const { workoutContent, workoutTitle, workoutId } = useSelector(state => state.editedWorkout)
     const [refreshing, setRefreshing] = useState(false)
     const [isEditingMode, setIsEditingMode] = useState(false)
-    const auth = getAuth()
+    
 
-    // Input: Object with workoutContet, workoutTitle
-    // Output: Object with mainTitle, subTitle, content
-    // const mapDocumentToUi = (document) => {
-    //     let content = ""
-    //     document.workoutContent.forEach(exercise => {
-    //         content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`)
-    //     })
-    //     return {
-    //         mainTitle: document.workoutTitle,
-    //         subTitle: document?.workoutDuration,
-    //         content: content
-    //     }
-    // }
-
-    // let loadAllWorkouts = async () => {
-    //     const q = query(collection(db, "user_workouts"), where("userId", "==", auth.currentUser.uid));
-
-    //     const querySnapshot = await getDocs(q);
-    //     let exerciseList = [];
-    //     querySnapshot.forEach((doc) => {
-    //       let workoutItem = mapDocumentToUi(doc.data());
-    //       exerciseList.push(workoutItem);
-    //     });   
-    //     setWorkoutPlans(exerciseList);
-
-    //     // setIsRefreshing(false);
-    // };
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (isFocused && workoutId) {
+            dispatch(clearEditedWorkout())
+        }  
+    }, [isFocused])
 
     useEffect(() => {
         dispatch(loadAllWorkouts());

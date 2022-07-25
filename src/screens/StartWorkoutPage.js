@@ -50,7 +50,6 @@ export default function StartWorkoutPage({navigation}) {
     }
 
     const onRefresh = useCallback(() => {
-        console.log("Loading now", isLoading)
         setRefreshing(true)
         //loadAllWorkouts()
         dispatch(loadAllWorkouts());
