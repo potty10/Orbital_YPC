@@ -16,9 +16,9 @@ export const loadAllWorkouts = createAsyncThunk('workoutList/loadAllWorkouts', a
   const q = query(collection(db, 'user_workouts'), where('userId', '==', auth.currentUser.uid));
   const querySnapshot = await getDocs(q);
   const exerciseList = [];
-  querySnapshot.forEach((doc) => {
-    const workoutItem = doc.data();
-    workoutItem.workoutId = doc.id;
+  querySnapshot.forEach((document) => {
+    const workoutItem = document.data();
+    workoutItem.workoutId = document.id;
     exerciseList.push(workoutItem);
   });
   return exerciseList;
@@ -52,7 +52,7 @@ const workoutListSlice = createSlice({
       state.workoutList = action.payload;
       state.loading = false;
     });
-    builder.addCase(loadAllWorkouts.rejected, (state) => {
+    builder.addCase(loadAllWorkouts.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     });
@@ -65,7 +65,7 @@ const workoutListSlice = createSlice({
       // state.workoutList = action.payload
       state.loading = false;
     });
-    builder.addCase(deleteWorkoutById.rejected, (state) => {
+    builder.addCase(deleteWorkoutById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     });

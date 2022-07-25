@@ -33,8 +33,11 @@ export default function Card({ style, item }) {
 export const mapDocumentToUi = (document) => {
   let content = '';
   document.workoutContent.forEach((exercise) => {
-    if (exercise.exerciseRepititions && exercise.exerciseWeight) content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`);
-    else content = content.concat(`${exercise.exerciseName}\n`);
+    if (exercise.exerciseRepititions && exercise.exerciseWeight) {
+      content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`);
+    } else {
+      content = content.concat(`${exercise.exerciseName}\n`);
+    }
   });
   return {
     mainTitle: document.workoutTitle,

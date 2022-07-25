@@ -21,8 +21,8 @@ export default function UserFeedPage() {
 
     const querySnapshot = await getDocs(q);
     const newWorkoutHistory = [];
-    querySnapshot.forEach((doc) => {
-      const workoutItem = mapDocumentToUi(doc.data());
+    querySnapshot.forEach((document) => {
+      const workoutItem = mapDocumentToUi(document.data());
       newWorkoutHistory.push(workoutItem);
     });
     setWorkoutHistory(newWorkoutHistory);

@@ -5,7 +5,7 @@ import {
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import AppStyles from '../styles/AppStyles';
 import InlineTextButton from '../components/InlineTextButton';
-import background from '../assets/background.jpeg'
+import background from '../assets/background.jpeg';
 
 export default function SignUp({ navigation }) {
   // const background = require('../assets/background.jpg');
@@ -26,7 +26,7 @@ export default function SignUp({ navigation }) {
     setValue(value);
   };
 
-  async function signUp() {
+  const signUp = async () => {
     if (password === confirmPassword) {
       try {
         await createUserWithEmailAndPassword(auth, email, password);
@@ -35,7 +35,7 @@ export default function SignUp({ navigation }) {
         setValidationMessage(error.message);
       }
     }
-  }
+  };
 
   return (
     <ImageBackground style={AppStyles.imageContainer} source={background}>

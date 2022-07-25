@@ -40,7 +40,7 @@ export default function ResetPassword({ navigation }) {
           onChangeText={setEmail}
         />
         <View style={[AppStyles.rowContainer, AppStyles.topMargin]}>
-          <Text style={AppStyles.lightText}>Don't have an account? </Text>
+          <Text style={AppStyles.lightText}>Don&apos;t have an account? </Text>
           <InlineTextButton text="Sign Up" onPress={() => navigation.navigate('SignUp')} />
         </View>
         <Button title="Reset Password" onPress={resetPassword} color="#f7b267" />

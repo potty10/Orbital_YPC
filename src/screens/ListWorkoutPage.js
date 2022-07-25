@@ -56,13 +56,13 @@ export default function ListWorkoutPage({ navigation }) {
     setRefreshing(false);
   });
 
-  const deleteWorkout = (workoutId) => {
+  const deleteWorkout = (selectedWorkoutId) => {
     Alert.alert('Are you sure?', 'This workout will be permanently deleted!', [
       {
         text: 'Cancel',
         style: 'cancel',
       },
-      { text: 'OK', onPress: () => dispatch(deleteWorkoutById(workoutId)) },
+      { text: 'OK', onPress: () => dispatch(deleteWorkoutById(selectedWorkoutId)) },
     ]);
   };
 
@@ -74,17 +74,16 @@ export default function ListWorkoutPage({ navigation }) {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Pressable style={styles.card}><Card item={mapDocumentToUi(item)} /></Pressable>
-      {isEditingMode
-                && (
-                <>
-                  <Pressable onPress={() => deleteWorkout(item.workoutId)} style={styles.deleteButton}>
-                    <Text>Delete</Text>
-                  </Pressable>
-                  <Pressable onPress={() => editWorkout(item)} style={styles.editButton}>
-                    <Text>Edit</Text>
-                  </Pressable>
-                </>
-                )}
+      {isEditingMode && (
+        <>
+          <Pressable onPress={() => deleteWorkout(item.workoutId)} style={styles.deleteButton}>
+            <Text>Delete</Text>
+          </Pressable>
+          <Pressable onPress={() => editWorkout(item)} style={styles.editButton}>
+            <Text>Edit</Text>
+          </Pressable>
+        </>
+      )}
     </View>
   );
 

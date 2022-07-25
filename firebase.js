@@ -18,10 +18,10 @@ const db = getFirestore(app);
 function useAuthentication() {
   const [user, setUser] = useState();
   useEffect(() => {
-    const unsubscribeFromAuthStatusChanged = getAuth().onAuthStateChanged((user) => {
-      if (user) {
+    const unsubscribeFromAuthStatusChanged = getAuth().onAuthStateChanged((currentUser) => {
+      if (currentUser) {
         // User is signed in
-        setUser(user);
+        setUser(currentUser);
       } else {
         // User is signed out
         setUser(undefined);

@@ -21,7 +21,8 @@ module.exports = {
     'linebreak-style': ['error', 'windows'],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'no-use-before-define': ['error', { functions: true, classes: true, variables: false }],
-    'max-len': ['error', { code: 120, ignoreComments: true }],
+    'max-len': ['error', { code: 120, ignoreComments: true, ignoreStrings: true }],
     'no-unused-vars': 'off',
+    'react/prop-types': 0,
   },
 };

@@ -116,7 +116,7 @@ export default function CreateWorkoutPage({ navigation, route }) {
     <View style={styles.container}>
       <TextInput
         style={{
-          marginBottom: 5, fontSize: 24, marginBottom: 20, marginTop: 20,
+          fontSize: 24, marginBottom: 20, marginTop: 20,
         }}
         placeholder="Workout Title"
         value={workoutTitle}

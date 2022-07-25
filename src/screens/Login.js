@@ -5,7 +5,7 @@ import {
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import AppStyles from '../styles/AppStyles';
 import InlineTextButton from '../components/InlineTextButton';
-import background from '../assets/background.jpeg'
+import background from '../assets/background.jpeg';
 
 export default function Login({ navigation }) {
   // const background = require('../assets/background.jpg');
@@ -24,7 +24,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  async function login() {
+  const login = async () => {
     if (email === '' || password === '') {
       setErrorMessage('Please enter an email and password');
     } else {
@@ -34,7 +34,7 @@ export default function Login({ navigation }) {
         setErrorMessage(error.message);
       }
     }
-  }
+  };
 
   return (
     <ImageBackground style={AppStyles.imageContainer} source={background}>
@@ -61,7 +61,7 @@ export default function Login({ navigation }) {
           onChangeText={setPassword}
         />
         <View style={[AppStyles.rowContainer, AppStyles.topMargin]}>
-          <Text style={AppStyles.lightText}>Don't have an account? </Text>
+          <Text style={AppStyles.lightText}>Don&apos;t have an account? </Text>
           <InlineTextButton text="Sign Up" onPress={() => navigation.navigate('SignUp')} />
         </View>
         <View style={[AppStyles.rowContainer, AppStyles.bottomMargin]}>

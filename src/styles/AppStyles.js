@@ -19,7 +19,6 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
   },
   rowContainer: {
     flexDirection: 'row',
