@@ -4,6 +4,7 @@ import { collection, addDoc, query, where, getDocs, deleteDoc, doc, setDoc } fro
 import { useAuthentication, db } from '../../firebase';
 import { useIsFocused } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import { setEditedWorkout, clearEditedWorkout, setEditedWorkoutTitle, setEditedWorkoutContent} from '../slices/editedWorkoutSlice'
 
 function Card({ item }) {
   return (
@@ -18,16 +19,17 @@ function Card({ item }) {
 // https://reactnavigation.org/docs/5.x/header-buttons/
 // Under the section: Header interaction with its screen component
 export default function CreateWorkoutPage({ navigation, route }) {
-  // const { workoutContent, workoutTitle } = useSelector(state => state.editedWorkout)
-  const [workoutTitle, setWorkoutTitle] = useState('');  
-  const [ exerciseList, setExerciseList ] = useState([])
+  const { workoutContent, workoutTitle } = useSelector(state => state.editedWorkout)
+  // const [workoutTitle, setWorkoutTitle] = useState('');  
+  // const [ exerciseList, setExerciseList ] = useState([])
   const { user } = useAuthentication()
 
   //https://stackoverflow.com/questions/70963093/is-there-a-way-to-trigger-usefocuseffect-every-time-the-screen-gets-focused-with
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused && route.params?.exerciseName) {
-      setExerciseList(oldList => [...oldList, {...route.params}])
+      dispatch(setEditedWorkoutContent([...workoutContent, {...route.params}]))
+      // setExerciseList(oldList => [...oldList, {...route.params}])
       // Set params to null so params are not stored
       // https://reactnavigation.org/docs/params/
       navigation.setParams({
@@ -39,7 +41,7 @@ export default function CreateWorkoutPage({ navigation, route }) {
   }, [isFocused])
 
   const addWorkoutToDb = async () => {
-    if (exerciseList.length === 0) {
+    if (workoutContent.length === 0) {
       Alert.alert("Empty workout is not allowed", null, [
         { text: "OK" }
       ])
@@ -47,7 +49,7 @@ export default function CreateWorkoutPage({ navigation, route }) {
       let newEntry = {
         // workoutTitle: workoutTitle ? workoutTitle : `New Workout (${(new Date()).toLocaleDateString('en-SG')})`,
         workoutTitle: workoutTitle ? workoutTitle : `New Workout`,
-        workoutContent: exerciseList,
+        workoutContent: workoutContent,
         userId: user.uid
       };
       try {
@@ -62,30 +64,32 @@ export default function CreateWorkoutPage({ navigation, route }) {
   };
 
   const repeatLastWorkout = () => {
-    if (exerciseList.length > 0) {
-      setExerciseList(oldList => {
-        return [...oldList, {...oldList[oldList.length - 1]}]
-      })
+    if (workoutContent.length > 0) {
+      dispatch(setEditedWorkoutContent([...workoutContent, {...workoutContent[workoutContent.length - 1]}]))
+      // setExerciseList(oldList => {
+      //   return [...oldList, {...oldList[oldList.length - 1]}]
+      // })
     } 
   }
 
   const deleteLastWorkout = () => {
-    setExerciseList(oldList => {
-      return oldList.slice(0, -1)
-    })
+    dispatch(setEditedWorkoutContent(workoutContent.slice(0, -1)))
+    // setExerciseList(oldList => {
+    //   return oldList.slice(0, -1)
+    // })
   }
   
   return (
     <View style={styles.container}>
       <TextInput style={{marginBottom: 5, fontSize: 24, marginBottom: 20, marginTop: 20}} placeholder='Workout Title' value={workoutTitle}
-        textAlign={'center'} onChangeText={text => setWorkoutTitle(text)} />    
+        textAlign={'center'} onChangeText={text => setEditedWorkoutTitle(text)} />    
       <ScrollView>
-        {exerciseList.map(item => <Card item={item} />)}
+        {workoutContent.map(item => <Card item={item} />)}
         {/* <FlatList data={exerciseList} renderItem={({ item, index }) => (<Card item={item} />)} /> */}
         <View style={styles.buttonStyle}>
         {/* <Button title='New Set'/> */}
-        <Button title='Delete' onPress={() => deleteLastWorkout()}/>
-        <Button title='Repeat' onPress={() => repeatLastWorkout()}/>
+        <Button title='Delete' onPress={deleteLastWorkout}/>
+        <Button title='Repeat' onPress={repeatLastWorkout}/>
         <Button title='Add New' onPress={() => navigation.navigate("Search Workout")}/>
         
       </View>

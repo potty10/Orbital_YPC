@@ -13,6 +13,12 @@ const editedWorkoutSlice = createSlice({
           ...state, ...action.payload
       }
     },
+    setEditedWorkoutContent(state, action) {
+      state.workoutContent = action.payload
+    },
+    setEditedWorkoutTitle(state, action) {
+      state.workoutTitle = action.payload
+    },
     clearEditedWorkout(state, action) {
         return {
             workoutTitle: "",
@@ -23,6 +29,6 @@ const editedWorkoutSlice = createSlice({
   },
 });
 
-export const { setEditedWorkout, clearEditedWorkout } = editedWorkoutSlice.actions;
+export const { setEditedWorkout, clearEditedWorkout, setEditedWorkoutTitle, setEditedWorkoutContent } = editedWorkoutSlice.actions;
 
 export default editedWorkoutSlice.reducer;
