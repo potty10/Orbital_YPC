@@ -1,17 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const currentWorkoutSlice = createSlice({
-  name: "currentWorkout",
+  name: 'currentWorkout',
   initialState: {
-    workoutTitle: "",
+    workoutTitle: '',
     workoutContent: [],
     workoutDuration: 0, // in milliseconds
   },
   reducers: {
     setCurrentWorkout(state, action) {
       return {
-          ...state, ...action.payload
-      }
+        ...state, ...action.payload,
+      };
     },
   },
 });
