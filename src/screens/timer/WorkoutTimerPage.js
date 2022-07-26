@@ -61,7 +61,6 @@ export default function WorkoutTimerPage({ navigation }) {
   };
 
   const reset = () => {
-    console.log('-----reset');
     setIsActive(false);
     setElapsedSeconds(0);
     setTotalSeconds(0);
