@@ -4,7 +4,6 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended',
     'airbnb',
   ],
   parserOptions: {
@@ -24,5 +23,6 @@ module.exports = {
     'max-len': ['error', { code: 120, ignoreComments: true, ignoreStrings: true }],
     'no-unused-vars': 'off',
     'react/prop-types': 0,
+    'react/no-unstable-nested-components': ['off'],
   },
 };

@@ -61,7 +61,6 @@ export default function WorkoutTimerPage({ navigation }) {
   };
 
   const reset = () => {
-    console.log('-----reset');
     setIsActive(false);
     setElapsedSeconds(0);
     setTotalSeconds(0);
@@ -96,8 +95,6 @@ export default function WorkoutTimerPage({ navigation }) {
       setIntervalId(interval);
       // Pause or reset
     } else if (!isActive) {
-      console.log('total seconds', totalSeconds);
-      console.log('Elapsed seconds', elapsedSeconds);
       clearInterval(interval);
       setTotalSeconds((start) => start + elapsedSeconds);
       setElapsedSeconds(0);
