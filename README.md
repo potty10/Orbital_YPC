@@ -10,7 +10,10 @@ Orbital Project for Team YPC. A simple mobile fitness app.
 1. Always use npm (also called the Node Package Manager) when installing dependencies. I have tested it and using both `npm install` and `yarn install` and/or `expo install` at the same time can lead to disastrous results.
 
 ### Code standards
-1. Always use functional components
+1. We used the AirBnb coding style. The specifics of the style can be found here: https://github.com/airbnb/javascript
+2. Code style is enforced with ESLint and Husky. Husky can be installed according to the instructions here: https://typicode.github.io/husky/#/
+
+Note: For Windows users, if you see the help message when running `npx husky add ...`, try `node node_modules/husky/lib/bin add ...` instead. This isn't an issue with husky code.
 
 ### Troubleshooting
 1. Make sure to import React from 'react' in every file
@@ -29,7 +32,6 @@ const styles = StyleSheet.create({
 ```
 
 ### Future extensions
-1. Deploy linters
-2. Create CI/CD pipeline
-3. Create a staging server to test app
-4. Use testing frameworks
+1. Create CI/CD pipeline
+2. Create a staging server to test app
+3. Use testing frameworks
