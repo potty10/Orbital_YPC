@@ -54,7 +54,7 @@ const Drawer = createDrawerNavigator();
 
 function HomeDrawer() {
   return (
-    <Drawer.Navigator initialRouteName="Feed">
+    <Drawer.Navigator>
       <Drawer.Screen name="Feed" component={UserFeedPage} />
       {/* <Drawer.Screen
       name="Workout List"

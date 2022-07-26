@@ -153,9 +153,6 @@ export default function WorkoutTimerPage({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              console.log('-----Saving');
-              console.log('Total seconds', totalSeconds);
-              console.log('elapsedSeconds', elapsedSeconds);
               setIsActive(false);
               dispatch(setCurrentWorkout({ workoutDuration }));
               navigation.navigate('Workout Summary');
