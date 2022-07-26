@@ -38,7 +38,7 @@ export default function ListWorkoutPage({ navigation }) {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
-          <Pressable onPress={() => setIsEditingMode((isEditingMode) => !isEditingMode)} style={{ marginRight: 26 }}>
+          <Pressable onPress={() => setIsEditingMode((previousMode) => !previousMode)} style={{ marginRight: 26 }}>
             <Text>{isEditingMode ? 'Done' : 'Edit'}</Text>
           </Pressable>
           <Pressable onPress={() => navigation.navigate('Create Workout')} style={{ marginRight: 26 }}>

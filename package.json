@@ -11,9 +11,11 @@
     "lint": "eslint *.js src/**/*.js",
     "lint:fix": "eslint --fix *.js src/**/*.js",
     "check": "prettier --check *.js src/**/*.js",
-    "write": "prettier --write *.js src/**/*.js"
+    "write": "prettier --write *.js src/**/*.js",
+    "prepare": "husky install"
   },
   "dependencies": {
+    "@expo/metro-config": "^0.3.21",
     "@expo/ngrok": "^4.1.0",
     "@react-navigation/drawer": "^6.4.3",
     "@react-navigation/native": "^6.0.11",
@@ -48,7 +50,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.7.1"
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "husky": "^8.0.0"
   },
   "private": true
 }

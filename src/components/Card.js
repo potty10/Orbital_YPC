@@ -34,7 +34,8 @@ export const mapDocumentToUi = (document) => {
   let content = '';
   document.workoutContent.forEach((exercise) => {
     if (exercise.exerciseRepititions && exercise.exerciseWeight) {
-      content = content.concat(`${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`);
+      const newLine = `${exercise.exerciseName} x ${exercise.exerciseRepititions} (${exercise.exerciseWeight} kg)\n`;
+      content = content.concat(newLine);
     } else {
       content = content.concat(`${exercise.exerciseName}\n`);
     }
