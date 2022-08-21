@@ -6,11 +6,11 @@ import {
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { secondToHHMMSS } from '../../utils/DateTimeUtil';
+import { secondToHHMMSS } from '../utils/DateTimeUtil';
 
 // Redux
-import { setCurrentWorkout } from '../../slices/currentWorkoutSlice';
-import { mapDocumentToUi } from '../../components/Card';
+import { setCurrentWorkout } from '../slices/currentWorkoutSlice';
+import { mapDocumentToUi } from '../components/Card';
 
 export default function WorkoutTimerPage({ navigation }) {
   const dispatch = useDispatch();

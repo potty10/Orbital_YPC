@@ -14,12 +14,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
   },
-  noPadding: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -27,23 +21,11 @@ export default StyleSheet.create({
     alignSelf: 'stretch',
     marginVertical: 4,
   },
-  fillSpace: {
-    flex: 1,
-  },
-  rightAligned: {
-    justifyContent: 'flex-end',
-  },
   topMargin: {
     marginTop: 16,
   },
   bottomMargin: {
     marginBottom: 16,
-  },
-  rightMargin: {
-    marginRight: 16,
-  },
-  leftMargin: {
-    marginLeft: 16,
   },
   backgroundCover: {
     alignSelf: 'stretch',
@@ -54,13 +36,13 @@ export default StyleSheet.create({
     padding: 16,
   },
   lightText: {
-    color: '#fff',
+    color: 'white',
   },
   errorText: {
-    color: '#ff0000',
+    color: 'red',
   },
   header: {
-    fontSize: 20,
+    fontSize: 18,
     alignSelf: 'center',
   },
   textInput: {
@@ -70,16 +52,13 @@ export default StyleSheet.create({
     marginVertical: 8,
   },
   lightTextInput: {
-    borderBottomColor: '#ffffff',
-  },
-  darkTextInput: {
-    borderBottomColor: '#000000',
+    borderBottomColor: 'white',
   },
   inlineTextButton: {
     color: '#87F1FF',
   },
   pressedInlineTextButton: {
     color: '#87F1FF',
-    opacity: 0.6,
+    opacity: 0.5,
   },
 });

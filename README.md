@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
 });
 ```
 
+### Testing
+Using jest
+- https://stackoverflow.com/questions/50863312/jest-gives-cannot-find-module-when-importing-components-with-absolute-paths
 ### Future extensions
 1. Create CI/CD pipeline
 2. Create a staging server to test app
