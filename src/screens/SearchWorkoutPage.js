@@ -3,18 +3,6 @@ import {
   StyleSheet, Text, View, FlatList, Pressable, TextInput, Button,
 } from 'react-native';
 import { FAB, Icon } from '@rneui/themed';
-// import { Searchbar } from 'react-native-paper';
-
-// const completeWorkoutList = [
-//     "Bench Press",
-//     "Squats",
-//     "Deadlift",
-//     "Barbell Row",
-//     'Romanian Deadlift',
-//     "Bicep Curl",
-//     "Dumbbell Press",
-//     "Shoulder Press"
-// ]
 
 const completeWorkoutList = [
   {

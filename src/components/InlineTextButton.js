@@ -1,18 +1,13 @@
 import React from 'react';
 import { Text, Pressable } from 'react-native';
-import AppStyles from '../styles/AppStyles';
+import AppStyles from '../styles/LoginStyles';
 
-export default function InlineTextButton(props) {
-  const { color, onPress, text } = props;
-  const style = {};
-  if (color) {
-    style.color = color;
-  }
+export default function InlineTextButton({ onPress, text }) {
   return (
     <Pressable onPress={onPress}>
       {({ pressed }) => (
         <Text
-          style={[pressed ? AppStyles.pressedInlineTextButton : AppStyles.inlineTextButton, style]}
+          style={pressed ? AppStyles.pressedInlineTextButton : AppStyles.inlineTextButton}
         >
           {text}
         </Text>

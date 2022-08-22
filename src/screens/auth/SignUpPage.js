@@ -1,26 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Text, View, TextInput, ImageBackground, Button, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import AppStyles from '../styles/AppStyles';
-import InlineTextButton from '../components/InlineTextButton';
-import background from '../assets/background.jpeg';
+import LoginStyles from '../../styles/LoginStyles';
+import InlineTextButton from '../../components/InlineTextButton';
+import background from '../../assets/background.jpeg';
 
 export default function SignUp({ navigation }) {
-  // const background = require('../assets/background.jpg');
   const auth = getAuth();
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-  const [validationMessage, setValidationMessage] = React.useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const validateAndSet = (value, valueToCompare, setValue) => {
     if (value !== valueToCompare) {
-      setValidationMessage('Passwords do not match.');
+      setErrorMessage('Passwords do not match.');
     } else {
-      setValidationMessage('');
+      setErrorMessage('');
     }
 
     setValue(value);
@@ -32,29 +31,25 @@ export default function SignUp({ navigation }) {
         await createUserWithEmailAndPassword(auth, email, password);
         navigation.navigate('Feed');
       } catch (error) {
-        setValidationMessage(error.message);
+        setErrorMessage(error.message);
       }
     }
   };
 
   return (
-    <ImageBackground style={AppStyles.imageContainer} source={background}>
-      <KeyboardAvoidingView
-        style={AppStyles.backgroundCover}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={60}
-      >
-        <Text style={[AppStyles.lightText, AppStyles.header]}>Sign Up</Text>
-        <Text style={[AppStyles.errorText]}>{validationMessage}</Text>
+    <ImageBackground style={LoginStyles.imageContainer} source={background}>
+      <KeyboardAvoidingView style={LoginStyles.backgroundCover}>    
+        <Text style={[LoginStyles.lightText, LoginStyles.header]}>Sign Up</Text>
+        <Text style={[LoginStyles.errorText]}>{errorMessage}</Text>
         <TextInput
-          style={[AppStyles.textInput, AppStyles.lightTextInput, AppStyles.lightText]}
+          style={[LoginStyles.textInput, LoginStyles.lightTextInput, LoginStyles.lightText]}
           placeholder="Email"
           placeholderTextColor="#BEBEBE"
           value={email}
           onChangeText={setEmail}
         />
         <TextInput
-          style={[AppStyles.textInput, AppStyles.lightTextInput, AppStyles.lightText]}
+          style={[LoginStyles.textInput, LoginStyles.lightTextInput, LoginStyles.lightText]}
           placeholder="Password"
           placeholderTextColor="#BEBEBE"
           secureTextEntry
@@ -62,15 +57,15 @@ export default function SignUp({ navigation }) {
           onChangeText={(value) => validateAndSet(value, confirmPassword, setPassword)}
         />
         <TextInput
-          style={[AppStyles.textInput, AppStyles.lightTextInput, AppStyles.lightText]}
+          style={[LoginStyles.textInput, LoginStyles.lightTextInput, LoginStyles.lightText]}
           placeholder="Confirm Password"
           placeholderTextColor="#BEBEBE"
           secureTextEntry
           value={confirmPassword}
           onChangeText={(value) => validateAndSet(value, password, setConfirmPassword)}
         />
-        <View style={[AppStyles.rowContainer, AppStyles.topMargin]}>
-          <Text style={AppStyles.lightText}>Already have an account? </Text>
+        <View style={[LoginStyles.rowContainer, LoginStyles.bottomMargin]}>
+          <Text style={LoginStyles.lightText}>Already have an account? </Text>
           <InlineTextButton text="Login" onPress={() => navigation.popToTop()} />
         </View>
         <Button title="Sign Up" onPress={signUp} color="#f7b267" />

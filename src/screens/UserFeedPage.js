@@ -8,9 +8,10 @@ import {
 import { getAuth } from 'firebase/auth';
 import Card, { mapDocumentToUi } from '../components/Card';
 import { db } from '../../firebase';
-import { msToTime } from '../utils/DateTimeUtil';
+import { useTheme } from '@rneui/themed';
 
 export default function UserFeedPage() {
+  const { theme } = useTheme();
   const [workoutHistory, setWorkoutHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -46,7 +47,7 @@ export default function UserFeedPage() {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       {isLoading
         ? <ActivityIndicator />
         : (
