@@ -4,11 +4,11 @@ on:
     branches:
       - development
 jobs:
-  publish:
+  publish-to-staging:
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🏗 Setup Node
         uses: actions/setup-node@v2
@@ -17,7 +17,7 @@ jobs:
           cache: npm
 
       - name: 🏗 Setup Expo
-        uses: expo/expo-github-action@v7
+        uses: expo/expo-github-action@7.2.0
         with:
           expo-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
