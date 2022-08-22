@@ -19,7 +19,7 @@ jobs:
       # https://www.youtube.com/watch?v=WuWsg0Ldess
       - name: Verify Expo token available
         run: |
-          if [[ "$EXPO_TOKEN" == ^ZkFWr.* ]]
+          if [[ "$EXPO_TOKEN" =~ ^1sLrj.* ]]
           then
             echo "Expo token is available"
           else
@@ -35,6 +35,9 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
           packager: npm
 
+      - name: Verify Expo installed
+        run: echo $(expo-cli --version)
+          
       - name: 📦 Install dependencies
         run: npm install
 
