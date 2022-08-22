@@ -42,4 +42,4 @@ jobs:
         run: npm install
 
       - name: 🚀 Publish app
-        run: expo publish $CI=1 --release-channel staging
+        run: expo publish --non-interactive --release-channel staging
