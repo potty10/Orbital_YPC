@@ -1,8 +1,8 @@
-name: Deployment to staging channel
+name: Deployment to default channel
 on:
   push:
     branches:
-      - development
+      - master
 jobs:
   publish-to-staging:
     runs-on: ubuntu-latest
@@ -42,4 +42,4 @@ jobs:
         run: npm install
 
       - name: 🚀 Publish app
-        run: expo publish --non-interactive --release-channel staging
+        run: expo publish --non-interactive
