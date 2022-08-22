@@ -19,7 +19,7 @@ jobs:
       # https://www.youtube.com/watch?v=WuWsg0Ldess
       - name: Verify Expo token available
         run: |
-          if [ "$EXPO_TOKEN" =~ ^ZkFWr]
+          if [[ "$EXPO_TOKEN" =~ ^ZkFWr]]
           then
             echo "Expo token is available"
           else
@@ -39,4 +39,4 @@ jobs:
         run: npm install
 
       - name: 🚀 Publish app
-        run: expo publish --non-interactive --release-channel staging
+        run: expo publish $CI=1 --release-channel staging
