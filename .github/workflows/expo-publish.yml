@@ -31,7 +31,7 @@ jobs:
       - name: 🏗 Setup Expo
         uses: expo/expo-github-action@7.2.0
         with:
-          expo-version: latest
+          expo-version: 5.4
           token: ${{ secrets.EXPO_TOKEN }}
           packager: npm
 
