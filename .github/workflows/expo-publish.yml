@@ -16,6 +16,18 @@ jobs:
           node-version: 16.x
           cache: npm
 
+      # https://www.youtube.com/watch?v=WuWsg0Ldess
+      - name: Verify Expo token available
+        run: |
+          if [ "$EXPO_TOKEN" =~ ^ZkFWr]
+          then
+            echo "Expo token is available"
+          else
+            echo "Expo token is not available. Cannot publish."
+          fi
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
       - name: 🏗 Setup Expo
         uses: expo/expo-github-action@7.2.0
         with:
