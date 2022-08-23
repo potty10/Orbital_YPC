@@ -1,6 +1,10 @@
 # Orbital_YPC
 Orbital Project for Team YPC. A simple mobile fitness app.
 
+Expo production: https://exp.host/@orbitalypc/Macro?release-channel=default 
+
+Expo staging: https://exp.host/@potty84/Macro?release-channel=staging
+
 ### Start
 1. npm install
 2. Request the config.js file for firebase configuration
