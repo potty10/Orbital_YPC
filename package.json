@@ -12,7 +12,8 @@
     "lint:fix": "eslint --fix *.js src/**/*.js",
     "check": "prettier --check *.js src/**/*.js",
     "write": "prettier --write *.js src/**/*.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "jest"
   },
   "dependencies": {
     "@expo/metro-config": "^0.3.21",
@@ -28,6 +29,8 @@
     "expo-updates": "~0.13.3",
     "firebase": "^9.9.0",
     "install": "^0.13.0",
+    "jest": "^26.6.3",
+    "jest-expo": "^45.0.1",
     "npm": "^8.14.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -42,6 +45,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@testing-library/react-native": "^11.0.0",
     "eslint": "^8.20.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.5.0",
@@ -50,9 +54,25 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
-    "husky": "^8.0.0"
+    "react-test-renderer": "^17.0.2"
   },
-  "private": true
+  "private": true,
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@rneui)"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules"
+    ],
+    "modulePaths": [
+      "<rootDir>"
+    ]
+  }
 }

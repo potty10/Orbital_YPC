@@ -7,7 +7,7 @@ import {
 import clockImage from '../assets/clock.png';
 
 // Utilities
-import { msToTime } from '../utils/DateTimeUtil';
+import { secondsToTime } from '../utils/DateTimeUtil';
 
 // By default, the width of Card depends on the alignItems property of the flex parent container
 export default function Card({ style, item }) {
@@ -42,7 +42,7 @@ export const mapDocumentToUi = (document) => {
   });
   return {
     mainTitle: document.workoutTitle,
-    subTitle: document.workoutDuration >= 0 && msToTime(document.workoutDuration),
+    subTitle: document.workoutDuration >= 0 && secondsToTime(document.workoutDuration),
     content,
   };
 };
