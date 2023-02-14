@@ -7,6 +7,15 @@ Expo is an open-source platform to rapidly develop Android and IOS apps with jus
 
 Link to QR code to try the app (Currently only available on Android): https://exp.host/@orbitalypc/Macro?release-channel=default
 
+
+<div style="display: flex; justify-content: center; gap: 20px">
+<img style="height: 400px" src="screenshots\pic1.jpeg">
+<img style="height: 400px" src="screenshots\pic2.jpeg">
+<img style="height: 400px" src="screenshots\pic3.jpeg">
+<img style="height: 400px" src="screenshots\pic4.jpeg">
+</div>
+
+
 ## Installation
 1. `npm install`
 2. Request the `config.js` file for firebase configuration
